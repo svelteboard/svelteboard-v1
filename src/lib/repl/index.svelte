@@ -93,7 +93,7 @@
 			<div
 				bind:this={resize_bar}
 				on:pointerdown={handle_pointerdown}
-				class="bg-gray-700 h-full w-1 cursor-col-resize absolute hidden sm:block"
+				class="bg-slate-700 h-full w-1 cursor-col-resize absolute hidden sm:block"
 				style="left:{input_w}%; margin-left:-4px;"
 			/>
 			<div style="width:{output_w}%">
@@ -112,7 +112,7 @@
 					output_w = !input_output_toggle * 100;
 				}}
 				type="button"
-				class="{input_output_toggle ? 'bg-gray-200' : 'bg-blue-400'} 
+				class="{input_output_toggle ? 'bg-slate-200' : 'bg-blue-400'} 
           m-auto relative inline-flex flex-shrink-0 h-6 w-11 border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
 				role="switch"
 				aria-checked="false"

@@ -47,7 +47,7 @@
 		on:new={new_component}
 		on:remove={remove_component}
 	/>
-	<div class="grow bg-gray-900 relative">
+	<div class="grow bg-slate-900 relative">
 		<CodeMirror bind:this={codemirror} bind:current_component bind:components />
 	</div>
 </section>

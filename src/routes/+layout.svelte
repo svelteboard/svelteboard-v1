@@ -93,7 +93,7 @@
 			<!-- svelte-ignore a11y-click-events-have-key-events -->
 			<!-- svelte-ignore a11y-no-static-element-interactions -->
 			<div
-				class="fixed inset-0 bg-gray-950/80 backdrop-blur-sm"
+				class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
 				on:click={() => (mobile_menu_open = false)}
 			/>
 			<nav class="relative z-10 px-9 pt-8 bg-white h-full overflow-y-auto">
