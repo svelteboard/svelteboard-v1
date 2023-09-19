@@ -1,8 +1,9 @@
 <script>
-	let npm_create;
+	let create_sveltekit_snippet;
+	let package_manager = 'npm';
 	async function copy_to_clipboard() {
 		// Get value from code block
-		const text = npm_create.innerText;
+		const text = create_sveltekit_snippet.innerText;
 
 		await navigator.clipboard.writeText(text);
 	}
@@ -14,69 +15,30 @@
 		>
 
 		<div class="mt-4 grid grid-cols-2 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
-			<!-- Active: "border-green-900 ring-2 ring-green-900", Not Active: "border-gray-300" -->
 			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
+				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
+				'npm'
+					? 'border-green-900 ring-2 ring-green-900'
+					: 'border-gray-300'}"
 			>
 				<input
 					type="radio"
-					name="project-type"
-					value="Newsletter"
+					name="package-manager"
+					value="npm"
+					bind:group={package_manager}
 					class="sr-only"
-					aria-labelledby="project-type-0-label"
-					aria-describedby="project-type-0-description-0 project-type-0-description-1"
+					aria-labelledby="package-manager-0-label"
+					aria-describedby="package-manager-0-description-0 package-manager-0-description-1"
 				/>
 				<span class="flex flex-1">
 					<span class="flex flex-col">
-						<span id="project-type-0-label" class="block text-sm font-medium text-gray-900"
-							>NPM</span
+						<span id="package-manager-0-label" class="block text-sm font-medium text-gray-900"
+							>npm</span
 						>
 					</span>
 				</span>
-				<!-- Not Checked: "invisible" -->
 				<svg
-					class="h-5 w-5 text-green-900"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-				<!--
-        Active: "border", Not Active: "border-2"
-        Checked: "border-green-900", Not Checked: "border-transparent"
-      -->
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-2"
-					aria-hidden="true"
-				/>
-			</label>
-			<!-- Active: "border-green-900 ring-2 ring-green-900", Not Active: "border-gray-300" -->
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-			>
-				<input
-					type="radio"
-					name="project-type"
-					value="Existing Customers"
-					class="sr-only"
-					aria-labelledby="project-type-1-label"
-					aria-describedby="project-type-1-description-0 project-type-1-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="project-type-1-label" class="block text-sm font-medium text-gray-900"
-							>PNPM</span
-						>
-					</span>
-				</span>
-				<!-- Not Checked: "invisible" -->
-				<svg
-					class="h-5 w-5 text-green-900"
+					class="h-5 w-5 text-green-900 {package_manager === 'npm' ? 'visible' : 'invisible'}"
 					viewBox="0 0 20 20"
 					fill="currentColor"
 					aria-hidden="true"
@@ -88,37 +50,121 @@
 					/>
 				</svg>
 
-				<!--
-        Active: "border", Not Active: "border-2"
-        Checked: "border-green-900", Not Checked: "border-transparent"
-      -->
 				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-2"
+					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
+					'npm'
+						? 'border-green-900'
+						: 'border-transparent'}"
 					aria-hidden="true"
 				/>
 			</label>
-			<!-- Active: "border-green-900 ring-2 ring-green-900", Not Active: "border-gray-300" -->
+			<label
+				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
+				'pnpm'
+					? 'border-green-900 ring-2 ring-green-900'
+					: 'border-gray-300'}"
+			>
+				<input
+					type="radio"
+					name="package-manager"
+					value="pnpm"
+					bind:group={package_manager}
+					class="sr-only"
+					aria-labelledby="package-manager-1-label"
+					aria-describedby="package-manager-1-description-0 package-manager-1-description-1"
+				/>
+				<span class="flex flex-1">
+					<span class="flex flex-col">
+						<span id="package-manager-1-label" class="block text-sm font-medium text-gray-900"
+							>pnpm</span
+						>
+					</span>
+				</span>
+				<svg
+					class="h-5 w-5 text-green-900 {package_manager === 'pnpm' ? 'visible' : 'invisible'}"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+					aria-hidden="true"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+
+				<span
+					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
+					'yarn'
+						? 'border-green-900'
+						: 'border-transparent'}"
+					aria-hidden="true"
+				/>
+			</label>
+			<label
+				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
+				'bun'
+					? 'border-green-900 ring-2 ring-green-900'
+					: 'border-gray-300'}"
+			>
+				<input
+					type="radio"
+					name="package-manager"
+					value="bun"
+					bind:group={package_manager}
+					class="sr-only"
+					aria-labelledby="package-manager-2-label"
+					aria-describedby="package-manager-2-description-0 package-manager-2-description-1"
+				/>
+				<span class="flex flex-1">
+					<span class="flex flex-col">
+						<span id="package-manager-2-label" class="block text-sm font-medium text-gray-900"
+							>bun</span
+						>
+					</span>
+				</span>
+				<svg
+					class="h-5 w-5 text-green-900 {package_manager === 'bun' ? '' : 'invisible'}"
+					viewBox="0 0 20 20"
+					fill="currentColor"
+					aria-hidden="true"
+				>
+					<path
+						fill-rule="evenodd"
+						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+						clip-rule="evenodd"
+					/>
+				</svg>
+
+				<span
+					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
+					'yarn'
+						? 'border-green-900'
+						: 'border-transparent'}"
+					aria-hidden="true"
+				/>
+			</label>
 			<label
 				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
 			>
 				<input
 					type="radio"
-					name="project-type"
-					value="Trial Users"
+					name="package-manager"
+					value="yarn"
+					bind:group={package_manager}
 					class="sr-only"
-					aria-labelledby="project-type-2-label"
-					aria-describedby="project-type-2-description-0 project-type-2-description-1"
+					aria-labelledby="package-manager-2-label"
+					aria-describedby="package-manager-2-description-0 package-manager-2-description-1"
 				/>
 				<span class="flex flex-1">
 					<span class="flex flex-col">
-						<span id="project-type-2-label" class="block text-sm font-medium text-gray-900"
-							>Bun</span
+						<span id="package-manager-2-label" class="block text-sm font-medium text-gray-900"
+							>yarn</span
 						>
 					</span>
 				</span>
-				<!-- Not Checked: "invisible" -->
 				<svg
-					class="h-5 w-5 text-green-900"
+					class="h-5 w-5 text-green-900 {package_manager === 'yarn' ? '' : 'invisible'}"
 					viewBox="0 0 20 20"
 					fill="currentColor"
 					aria-hidden="true"
@@ -134,47 +180,7 @@
         Checked: "border-green-900", Not Checked: "border-transparent"
       -->
 				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-2"
-					aria-hidden="true"
-				/>
-			</label>
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-			>
-				<input
-					type="radio"
-					name="project-type"
-					value="Trial Users"
-					class="sr-only"
-					aria-labelledby="project-type-2-label"
-					aria-describedby="project-type-2-description-0 project-type-2-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="project-type-2-label" class="block text-sm font-medium text-gray-900"
-							>Bun</span
-						>
-					</span>
-				</span>
-				<!-- Not Checked: "invisible" -->
-				<svg
-					class="h-5 w-5 text-green-900"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-				<!--
-        Active: "border", Not Active: "border-2"
-        Checked: "border-green-900", Not Checked: "border-transparent"
-      -->
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-2"
+					class="pointer-events-none absolute -inset-px rounded-lg border-1"
 					aria-hidden="true"
 				/></label
 			>
@@ -183,7 +189,7 @@
 
 	<div class="bg-slate-100 rounded-lg mt-12">
 		<div class="w-full flex justify-between bg-slate-200 p-2 rounded-t-lg">
-			<h4>Install Svelte</h4>
+			<h4>Install SvelteKit</h4>
 			<button on:click={copy_to_clipboard}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -202,11 +208,11 @@
 			</button>
 		</div>
 		<div class="p-4">
-			<code bind:this={npm_create}>
-				npm create svelte@latest my-app<br />
+			<code bind:this={create_sveltekit_snippet}>
+				{package_manager} create svelte@latest my-app<br />
 				cd my-app<br />
-				npm install<br />
-				npm run dev <br />
+				{package_manager} install<br />
+				{package_manager === 'npm' ? `${package_manager} run` : package_manager} dev <br />
 			</code>
 		</div>
 	</div>
