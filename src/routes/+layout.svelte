@@ -23,7 +23,7 @@
 </svelte:head>
 
 <div class="min-h-screen flex flex-col">
-	<nav class="bg-green-950">
+	<nav class="bg-slate-950 border-b border-gray-800">
 		<div class="container px-4 mx-auto">
 			<div class="flex items-center justify-between py-5">
 				<div class="w-auto">
