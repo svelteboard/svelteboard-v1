@@ -7,213 +7,77 @@
 
 		await navigator.clipboard.writeText(text);
 	}
+
+	let package_managers = ['npm', 'pnpm', 'bun', 'yarn'];
 </script>
 
-<div class="max-w-7xl mx-auto mt-12">
-	<fieldset>
-		<legend class="text-base font-semibold leading-6 text-gray-900">Select a package manager</legend
+<section class="relative pt-12 md:pt-24 bg-forest-900">
+	<div class="absolute h-full w-full top-0 le ft-0 bg-[url('/noise.png')] opacity-5 z-0" />
+	<div class="text-center mb-24 relative">
+		<h1
+			class="font-heading tracking-tight text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4"
 		>
-
-		<div class="mt-4 grid grid-cols-2 gap-y-6 sm:grid-cols-4 sm:gap-x-4">
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
-				'npm'
-					? 'border-green-900 ring-2 ring-green-900'
-					: 'border-gray-300'}"
-			>
-				<input
-					type="radio"
-					name="package-manager"
-					value="npm"
-					bind:group={package_manager}
-					class="sr-only"
-					aria-labelledby="package-manager-0-label"
-					aria-describedby="package-manager-0-description-0 package-manager-0-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="package-manager-0-label" class="block text-sm font-medium text-gray-900"
-							>npm</span
+			Code Snippets
+		</h1>
+		<p class="text-lg text-gray-300">Code Snippets to get you started.</p>
+	</div>
+</section>
+<section>
+	<div class="py-12 md:py-24 bg-gray-50">
+		<div class="container px-4 mx-auto">
+			<div class="flex flex-wrap -mx-4">
+				<div class="w-full lg:w-3/12 px-4 mb-10 lg:mb-0">
+					<div class="max-w-xs pr-10 text-gray-900 font-semibold">
+						<h4 class="mb-2">Package Manager</h4>
+						<ul class="pr-6">
+							{#each package_managers as manager}
+								<li class="mb-3">
+									<button
+										on:click={() => (package_manager = manager)}
+										class="block px-6 border-l-2 {package_manager === manager
+											? 'border-lime-500 text-gray-900 font-semibold'
+											: 'border-transparent text-gray-500'}">{manager}</button
+									>
+								</li>
+							{/each}
+						</ul>
+					</div>
+				</div>
+				<div class="w-full lg:w-9/12 px-4">
+					<div class="flex flex-wrap -mx-4">
+						<div
+							class="w-full md:w-1/2 px-4 py-6 mb-16 bg-white flex flex-col h-full rounded-xl shadow-xl overflow-hidden border border-gray-100 hover:border-lime-500 ring ring-transparent hover:ring-lime-500"
 						>
-					</span>
-				</span>
-				<svg
-					class="h-5 w-5 text-green-900 {package_manager === 'npm' ? 'visible' : 'invisible'}"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
-					'npm'
-						? 'border-green-900'
-						: 'border-transparent'}"
-					aria-hidden="true"
-				/>
-			</label>
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
-				'pnpm'
-					? 'border-green-900 ring-2 ring-green-900'
-					: 'border-gray-300'}"
-			>
-				<input
-					type="radio"
-					name="package-manager"
-					value="pnpm"
-					bind:group={package_manager}
-					class="sr-only"
-					aria-labelledby="package-manager-1-label"
-					aria-describedby="package-manager-1-description-0 package-manager-1-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="package-manager-1-label" class="block text-sm font-medium text-gray-900"
-							>pnpm</span
-						>
-					</span>
-				</span>
-				<svg
-					class="h-5 w-5 text-green-900 {package_manager === 'pnpm' ? 'visible' : 'invisible'}"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
-					'yarn'
-						? 'border-green-900'
-						: 'border-transparent'}"
-					aria-hidden="true"
-				/>
-			</label>
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none {package_manager ===
-				'bun'
-					? 'border-green-900 ring-2 ring-green-900'
-					: 'border-gray-300'}"
-			>
-				<input
-					type="radio"
-					name="package-manager"
-					value="bun"
-					bind:group={package_manager}
-					class="sr-only"
-					aria-labelledby="package-manager-2-label"
-					aria-describedby="package-manager-2-description-0 package-manager-2-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="package-manager-2-label" class="block text-sm font-medium text-gray-900"
-							>bun</span
-						>
-					</span>
-				</span>
-				<svg
-					class="h-5 w-5 text-green-900 {package_manager === 'bun' ? '' : 'invisible'}"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-1 {package_manager ===
-					'yarn'
-						? 'border-green-900'
-						: 'border-transparent'}"
-					aria-hidden="true"
-				/>
-			</label>
-			<label
-				class="relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none"
-			>
-				<input
-					type="radio"
-					name="package-manager"
-					value="yarn"
-					bind:group={package_manager}
-					class="sr-only"
-					aria-labelledby="package-manager-2-label"
-					aria-describedby="package-manager-2-description-0 package-manager-2-description-1"
-				/>
-				<span class="flex flex-1">
-					<span class="flex flex-col">
-						<span id="package-manager-2-label" class="block text-sm font-medium text-gray-900"
-							>yarn</span
-						>
-					</span>
-				</span>
-				<svg
-					class="h-5 w-5 text-green-900 {package_manager === 'yarn' ? '' : 'invisible'}"
-					viewBox="0 0 20 20"
-					fill="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						fill-rule="evenodd"
-						d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-						clip-rule="evenodd"
-					/>
-				</svg>
-				<!--
-        Active: "border", Not Active: "border-2"
-        Checked: "border-green-900", Not Checked: "border-transparent"
-      -->
-				<span
-					class="pointer-events-none absolute -inset-px rounded-lg border-1"
-					aria-hidden="true"
-				/></label
-			>
-		</div>
-	</fieldset>
-
-	<div class="bg-slate-100 rounded-lg mt-12">
-		<div class="w-full flex justify-between bg-slate-200 p-2 rounded-t-lg">
-			<h4>Install SvelteKit</h4>
-			<button on:click={copy_to_clipboard}>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke-width="1.5"
-					stroke="currentColor"
-					class="w-6 h-6"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
-					/>
-				</svg>
-			</button>
-		</div>
-		<div class="p-4">
-			<code bind:this={create_sveltekit_snippet}>
-				{package_manager} create svelte@latest my-app<br />
-				cd my-app<br />
-				{package_manager} install<br />
-				{package_manager === 'npm' ? `${package_manager} run` : package_manager} dev <br />
-			</code>
+							<div class="w-full flex justify-between rounded-t-lg">
+								<h4 class="text-base font-semibold leading-6 text-gray-700">Install SvelteKit</h4>
+								<button on:click={copy_to_clipboard}>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 text-gray-600"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+										/>
+									</svg>
+								</button>
+							</div>
+							<code bind:this={create_sveltekit_snippet}>
+								{package_manager} create svelte@latest
+								<span class="focus-none" contenteditable="true">my-app</span><br />
+								cd my-app<br />
+								{package_manager} install<br />
+								{package_manager === 'npm' ? `${package_manager} run` : package_manager} dev <br />
+							</code>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-</div>
+</section>

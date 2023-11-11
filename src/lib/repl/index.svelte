@@ -13,7 +13,7 @@
 	let worker, compiled;
 	let input_output_toggle = true;
 	let innerWidth;
-	export let components = [
+	export let content = [
 		{
 			id: 1,
 			name: `App`,
@@ -73,7 +73,7 @@
 		);
 	}
 
-	$: compile(components);
+	$: compile(content);
 </script>
 
 <svelte:head>
@@ -84,11 +84,11 @@
 </svelte:head>
 <svelte:window bind:innerWidth />
 
-<div class="w-full relative shadow-sm grow flex flex-col">
+<div class="w-full relative shadow-sm grow flex flex-col not-prose h-full">
 	<div class="overflow-scroll grow flex flex-col">
 		<div class="inline-flex w-full grow">
 			<div style="width:{input_w}%;" class="max-h-screen overflow-scroll pb-[40px] sm:pb-0">
-				<Input bind:components bind:current />
+				<Input bind:components={content} bind:current />
 			</div>
 			<div
 				bind:this={resize_bar}

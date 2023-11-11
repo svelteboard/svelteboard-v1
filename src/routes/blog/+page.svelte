@@ -1,66 +1,81 @@
-<section class="relative">
-	<div class="absolute inset-0 -z-10 overflow-hidden">
-		<svg
-			class="absolute left-[max(50%,25rem)] top-0 h-[64rem] w-[128rem] -translate-x-1/2 stroke-slate-200 [mask-image:radial-gradient(64rem_64rem_at_top,white,transparent)]"
-			aria-hidden="true"
-		>
-			<defs>
-				<pattern
-					id="e813992c-7d03-4cc4-a2bd-151760b470a0"
-					width="200"
-					height="200"
-					x="50%"
-					y="-1"
-					patternUnits="userSpaceOnUse"
-				>
-					<path d="M100 200V.5M.5 .5H200" fill="none" />
-				</pattern>
-			</defs>
-			<svg x="50%" y="-1" class="overflow-visible fill-green-50">
-				<path
-					d="M-100.5 0h201v201h-201Z M699.5 0h201v201h-201Z M499.5 400h201v201h-201Z M-300.5 600h201v201h-201Z"
-					stroke-width="0"
-				/>
-			</svg>
-			<rect
-				width="100%"
-				height="100%"
-				stroke-width="0"
-				fill="url(#e813992c-7d03-4cc4-a2bd-151760b470a0)"
-			/>
-		</svg>
-	</div>
-	<div class="py-24 sm:py-32 max-w-7xl m-auto">
-		<div class="px-6 lg:px-8">
-			<div class="mx-auto max-w-2xl">
-				<h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Blog</h2>
-				<p class="mt-2 text-lg leading-8 text-slate-600">Experiments, projects, and tutorials</p>
-				<div class="mt-10 space-y-16 border-t border-slate-200 pt-10 sm:mt-16 sm:pt-16">
-					<article class="flex max-w-xl flex-col items-start justify-between">
-						<div class="flex items-center gap-x-4 text-xs">
-							<time datetime="2020-03-16" class="text-slate-500">Mar 16, 2020</time>
-							<a
-								href="#"
-								class="relative z-10 rounded-full bg-slate-50 px-3 py-1.5 font-medium text-slate-600 hover:bg-slate-100"
-								>Video</a
-							>
-						</div>
-						<div class="group relative">
-							<h3
-								class="mt-3 text-lg font-semibold leading-6 text-slate-900 group-hover:text-slate-600"
-							>
-								<a href="#">
-									<span class="absolute inset-0" />
-									Svnotion
-								</a>
-							</h3>
-							<p class="mt-5 line-clamp-3 text-md leading-6 text-slate-600">
-								Building a Notion editor clone with Svelte, Tiptap, and Tailwind.
-							</p>
-						</div>
-					</article>
+<script>
+	let create_sveltekit_snippet;
+	let package_manager = 'npm';
+	async function copy_to_clipboard() {
+		// Get value from code block
+		const text = create_sveltekit_snippet.innerText;
 
-					<!-- More posts... -->
+		await navigator.clipboard.writeText(text);
+	}
+
+	let package_managers = ['Tutorial', 'Video', 'Experiment', 'Tool'];
+</script>
+
+<section class="relative pt-12 md:pt-24 bg-forest-900">
+	<div class="absolute h-full w-full top-0 le ft-0 bg-[url('/noise.png')] opacity-5 z-0" />
+	<div class="text-center mb-24 relative">
+		<h1
+			class="font-heading tracking-tight text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4"
+		>
+			Blog
+		</h1>
+		<p class="text-lg text-gray-300">Tutorials, experiments, and prototypes</p>
+	</div>
+</section>
+<section>
+	<div class="py-12 md:py-24 bg-gray-50">
+		<div class="container px-4 mx-auto">
+			<div class="flex flex-wrap -mx-4">
+				<div class="w-full lg:w-3/12 px-4 mb-10 lg:mb-0">
+					<div class="max-w-xs pr-10 text-gray-900 font-semibold">
+						<h4 class="mb-2">Categories</h4>
+						<ul class="pr-6">
+							{#each package_managers as manager}
+								<li class="mb-3">
+									<button
+										on:click={() => (package_manager = manager)}
+										class="block px-6 border-l-2 {package_manager === manager
+											? 'border-lime-500 text-gray-900 font-semibold'
+											: 'border-transparent text-gray-500'}">{manager}</button
+									>
+								</li>
+							{/each}
+						</ul>
+					</div>
+				</div>
+				<div class="w-full lg:w-9/12 px-4">
+					<div class="flex flex-wrap -mx-4">
+						<div
+							class="w-full md:w-1/2 px-4 py-6 mb-16 bg-white flex flex-col h-full rounded-xl shadow-xl overflow-hidden border border-gray-100 hover:border-lime-500 ring ring-transparent hover:ring-lime-500"
+						>
+							<div class="w-full flex justify-between rounded-t-lg">
+								<h4 class="text-base font-semibold leading-6 text-gray-700">Install SvelteKit</h4>
+								<button on:click={copy_to_clipboard}>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke-width="1.5"
+										stroke="currentColor"
+										class="w-6 h-6 text-gray-600"
+									>
+										<path
+											stroke-linecap="round"
+											stroke-linejoin="round"
+											d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
+										/>
+									</svg>
+								</button>
+							</div>
+							<code bind:this={create_sveltekit_snippet}>
+								{package_manager} create svelte@latest
+								<span class="focus-none" contenteditable="true">my-app</span><br />
+								cd my-app<br />
+								{package_manager} install<br />
+								{package_manager === 'npm' ? `${package_manager} run` : package_manager} dev <br />
+							</code>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

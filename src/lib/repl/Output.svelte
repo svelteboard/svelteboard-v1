@@ -1,15 +1,15 @@
 <script>
-  export let compiled;
+	export let compiled;
 
-  let iframe;
+	let iframe;
 
-  function update(code) {
-    iframe.contentWindow.postMessage(code, "*");
-  }
+	function update(code) {
+		iframe.contentWindow.postMessage(code, '*');
+	}
 
-  $: iframe && compiled && update(compiled);
+	$: iframe && compiled && update(compiled);
 
-  const srcdoc = `
+	const srcdoc = `
 <!doctype html>
 <html>
 	<head>
@@ -51,12 +51,12 @@
 	`;
 </script>
 
-<section class="h-full w-full">
-  <iframe
-    class="w-full h-full"
-    title="Rendered REPL"
-    bind:this={iframe}
-    {srcdoc}
-    sandbox="allow-scripts"
-  />
+<section class="h-full w-full bg-white">
+	<iframe
+		class="w-full h-full"
+		title="Rendered REPL"
+		bind:this={iframe}
+		{srcdoc}
+		sandbox="allow-scripts"
+	/>
 </section>
