@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+			html,
+			body {
+				height: 100%;
+				width: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+
+		<script type="module">
+			import { n as mount } from 'https://jspm.dev/npm:svelte@5.0.0-next.1/_/igkqbO3C.js';
+
+			let currentAppCleanup = null;
+			let app = null;
+
+			function update(source) {
+				console.log('update');
+				// Clean up the previous app instance and styles
+
+				const styles = document.querySelectorAll('style[id^="svelte-"]');
+				styles.forEach((style) => style.remove());
+
+				// Create a container for the Svelte component
+				const container = document.createElement('div');
+				document.body.appendChild(container);
+
+				// Mount the new component
+				const blob = new Blob([source], { type: 'text/javascript' });
+
+				const url = URL.createObjectURL(blob);
+				console.log(url);
+
+				import(url)
+					.then(({ default: App }) => {
+						console.log(App);
+						app = mount(App, { target: container });
+					})
+					.catch((error) => {
+						console.error('Error mounting component:', error);
+						// Handle the error appropriately
+					});
+			}
+
+			window.addEventListener(
+				'message',
+				(event) => {
+					console.log('window event listener');
+					update(event.data);
+				},
+				false
+			);
+		</script>
+
+		<script src="https://cdn.tailwindcss.com"></script>
+	</head>
+	<body></body>
+</html>

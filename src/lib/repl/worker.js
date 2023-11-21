@@ -4,6 +4,8 @@ import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browse
 
 const CDN_URL = 'https://cdn.jsdelivr.net/npm';
 // const CDN_URL = "https://unpkg.com";
+var svelte;
+const version = '5.0.0-next.8';
 const component_lookup = new Map();
 
 const fetch_cache = new Map();
@@ -44,10 +46,18 @@ function generate_lookup(components) {
 }
 
 self.addEventListener('message', async (event) => {
+	// try {
+	// 	importScripts('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
+	// } catch {
+	// 	await import('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
+	// }
+
 	try {
-		importScripts('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
+		importScripts(`https://jspm.dev/npm:svelte@${version}/compiler`);
 	} catch {
-		await import('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
+		// await import(`https://jspm.dev/npm:svelte@5.0.0-next.1/compiler`);
+		svelte = await import(`https://jspm.dev/npm:svelte@${version}/compiler`);
+		// await import(`https://jspm.dev/npm:svelte@${version}/compiler`);
 	}
 
 	generate_lookup(event.data);
@@ -59,20 +69,27 @@ self.addEventListener('message', async (event) => {
 				name: 'repl-plugin',
 				async resolveId(importee, importer) {
 					// handle imports from 'svelte'
-
 					// import x from 'svelte'
-					if (importee === 'svelte') return `${CDN_URL}/svelte/index.mjs`;
+					if (importee === 'svelte') return `${CDN_URL}/svelte@${version}/index.js`;
 
-					// import x from 'svelte/somewhere'
+					if (importee === 'svelte/internal') {
+						return `${CDN_URL}/svelte@${version}/src/internal/index.js`;
+					}
+
+					if (importee === 'esm-env') {
+						return `${CDN_URL}/esm-env@1.0.0/dev-browser.js`;
+					}
+
 					if (importee.startsWith('svelte/')) {
-						return `${CDN_URL}/svelte/${importee.slice(7)}/index.mjs`;
+						// import x from 'svelte/somewhere'
+						return `${CDN_URL}/svelte@${version}/src/${importee.slice(7)}.js`;
 					}
 
 					// import x from './file.js' (via a 'svelte' or 'svelte/x' package)
-					if (importer && importer.startsWith(`${CDN_URL}/svelte/` || importer == 'svelte')) {
+					if (importer && importer.startsWith(`${CDN_URL}/svelte` || importer == 'svelte')) {
 						const resolved = new URL(importee, importer).href;
-						if (resolved.endsWith('.mjs')) return resolved;
-						return `${resolved}/index.mjs`;
+						if (resolved.endsWith('.js')) return resolved;
+						return `${resolved}/index.js`;
 					}
 
 					// local repl components
@@ -123,6 +140,7 @@ self.addEventListener('message', async (event) => {
 				transform(code, id) {
 					// our only transform is to compile svelte components
 					//@ts-ignore
+
 					if (/.*\.svelte/.test(id)) return svelte.compile(code).js.code;
 				}
 			}
