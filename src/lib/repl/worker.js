@@ -5,7 +5,7 @@ import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browse
 const CDN_URL = 'https://cdn.jsdelivr.net/npm';
 // const CDN_URL = "https://unpkg.com";
 var svelte;
-const version = '5.0.0-next.8';
+const version = '5.0.0-next.15';
 const component_lookup = new Map();
 
 const fetch_cache = new Map();
@@ -141,6 +141,7 @@ self.addEventListener('message', async (event) => {
 					// our only transform is to compile svelte components
 					//@ts-ignore
 
+					// if (/.*\.svelte/.test(id)) return svelte.compile(code).js.code;
 					if (/.*\.svelte/.test(id)) return svelte.compile(code).js.code;
 				}
 			}

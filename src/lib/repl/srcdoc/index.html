@@ -12,17 +12,28 @@
 		</style>
 
 		<script type="module">
-			import { n as mount } from 'https://jspm.dev/npm:svelte@5.0.0-next.1/_/igkqbO3C.js';
+			import { n as mount } from 'https://jspm.dev/npm:svelte@5.0.0-next.11/_/ItiZK9df.js';
 
 			let currentAppCleanup = null;
 			let app = null;
 
-			function update(source) {
-				console.log('update');
-				// Clean up the previous app instance and styles
+			function cleanupPreviousApp() {
+				if (currentAppCleanup) {
+					currentAppCleanup();
+					currentAppCleanup = null;
+				}
 
 				const styles = document.querySelectorAll('style[id^="svelte-"]');
 				styles.forEach((style) => style.remove());
+
+				if (app) {
+					app = null;
+				}
+			}
+
+			function update(source) {
+				console.log('update');
+				cleanupPreviousApp();
 
 				// Create a container for the Svelte component
 				const container = document.createElement('div');
@@ -30,18 +41,19 @@
 
 				// Mount the new component
 				const blob = new Blob([source], { type: 'text/javascript' });
-
 				const url = URL.createObjectURL(blob);
 				console.log(url);
 
 				import(url)
 					.then(({ default: App }) => {
 						console.log(App);
-						app = mount(App, { target: container });
+						// const [accessors, destroy] = mount(App, { target: container });
+						const app = mount(App, { target: document.getElementById('app') });
+						console.log(app);
+						// currentAppCleanup = destroy;
 					})
 					.catch((error) => {
 						console.error('Error mounting component:', error);
-						// Handle the error appropriately
 					});
 			}
 
@@ -54,8 +66,9 @@
 				false
 			);
 		</script>
-
-		<script src="https://cdn.tailwindcss.com"></script>
+		<!-- <script src="https://cdn.tailwindcss.com"></script> -->
 	</head>
-	<body></body>
+	<body>
+		<div id="app"></div>
+	</body>
 </html>
