@@ -1,21 +1,19 @@
 <script>
-	let url = 'tailwindcss.com';
-	let active_url = 'tailwindcss.com';
+	let url = $state('tailwindcss.com');
+	let active_url = $state('tailwindcss.com');
 	let screen;
-	let screenBottom = 0;
 	let iframe;
-	let phone = true;
-	let w = 375;
-	let width = '375';
-	let h = 812;
-	let height = '812';
-	let s = 1;
-	let scale = '100';
-	$: s = parseInt(scale) / 100;
-	$: w = parseInt(width);
-	$: h = parseInt(height);
-	let mouseDownX = false;
-	let mouseDownY = false;
+	let phone = $state(true);
+	let width = $state('375');
+	let height = $state('812');
+	let scale = $state('100');
+
+	let s = $derived(parseInt(scale) / 100);
+	let w = $derived(parseInt(width));
+	let h = $derived(parseInt(height));
+
+	let mouseDownX = $state(false);
+	let mouseDownY = $state(false);
 	function handleMousedownX() {
 		mouseDownX = true;
 	}
@@ -30,23 +28,23 @@
 		if (mouseDownX) {
 			let screenRight = screen.getBoundingClientRect().right;
 			let x = e.clientX;
-			w = x - screenRight + w - 11;
+			width = x - screenRight + w - 11;
 			if (w < 500) {
 				phone = true;
 			} else {
 				phone = false;
 			}
 			if (w < 278) {
-				w = 278;
+				width = 278;
 			}
 			width = Math.round(w).toString();
 		}
 		if (mouseDownY) {
 			let screenBottom = screen.getBoundingClientRect().bottom;
 			let y = e.clientY;
-			h = y - screenBottom + h + 30;
+			height = y - screenBottom + h + 30;
 			if (h < 220) {
-				h = 221;
+				height = 221;
 			}
 			height = Math.round(h).toString();
 		}
@@ -59,20 +57,22 @@
 		return min;
 	}
 	let time = new Date();
-	$: hours = time.getHours() % 12 || 12;
-	$: minutes = getMinutes();
+	let hours = $derived(time.getHours() % 12 || 12);
+	let minutes = $derived(time.getMinutes());
 	function selectURL(el) {
 		var range = document.createRange();
+		if (!range) return;
 		range.selectNodeContents(el);
 		var sel = window.getSelection();
 		sel.removeAllRanges();
 		sel.addRange(range);
 	}
-	let desktopUrl, mobileUrl;
-	let toggleMask = true;
-	let color = '#F0FFFF';
-	let opacity = 100;
-	let mixBlend = 'multiply';
+	let desktopUrl = $state();
+	let mobileUrl = $state();
+	let toggleMask = $state(true);
+	let color = $state('#F0FFFF');
+	let opacity = $state(100);
+	let mixBlend = $state('multiply');
 	function handle_blur() {
 		url = url.replace('https://', '');
 		active_url = url;
@@ -121,7 +121,7 @@
 		>
 			<div class="flex items-center">
 				<button
-					on:click={() => (toggleMask = !toggleMask)}
+					onclick={() => (toggleMask = !toggleMask)}
 					type="button"
 					class="{toggleMask
 						? 'bg-blue-600'
@@ -253,7 +253,7 @@
 							<!-- svelte-ignore a11y-no-static-element-interactions -->
 							<!-- svelte-ignore a11y-click-events-have-key-events -->
 							<div
-								on:click={selectURL(desktopUrl)}
+								onclick={() => selectURL(desktopUrl)}
 								class="bg-slate-100 rounded-md font-medium text-xs leading-6 py-1 flex items-center justify-center ring-1 ring-inset ring-slate-900/5 mx-auto w-5/5 dark:bg-slate-800 dark:text-slate-500"
 							>
 								<svg
@@ -371,7 +371,7 @@ c-52 33 -88 86 -102 147 -14 62 -14 1898 0 1960 18 80 85 155 155 173 10 2
 					<!-- svelte-ignore a11y-no-static-element-interactions -->
 					<!-- svelte-ignore a11y-click-events-have-key-events -->
 					<div
-						on:click={selectURL(mobileUrl)}
+						onclick={() => selectURL(mobileUrl)}
 						class="bg-slate-100 rounded-md font-medium text-xs leading-6 py-1 flex items-center justify-center ring-1 ring-inset ring-slate-900/5 mx-auto w-5/5 dark:bg-slate-800 dark:text-slate-500"
 					>
 						<svg

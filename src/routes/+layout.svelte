@@ -44,7 +44,7 @@
 								<li class="font-medium tracking-tight">
 									<a
 										class="text-white hover:text-forest-300 px-6 py-3 border-b border-transparent hover:border-forest-300"
-										href="snippets">Code Snippets</a
+										href="/snippets">Code Snippets</a
 									>
 								</li>
 								<li class="font-medium tracking-tight">
