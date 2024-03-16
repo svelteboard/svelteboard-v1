@@ -25,18 +25,6 @@
 		"url": "/blog/color-experiment"
 	},
 	{
-		"tag": "Hugging Face",
-		"title": "Introduction to the 🤗 Accelerated Inference API in Svelte",
-		"preview": "Hugging Face is the easiest way to build, train, and deploy machine learning models.",
-		"url": "/blog/huggingface"
-	},
-	{
-		"tag": "Hugging Face",
-		"title": "Text to Speech with the Hugging Face Inference API",
-		"preview": "Generate speech from text with the Hugging Face Inference API.",
-		"url": "/blog/huggingface/text-to-speech"
-	},
-	{
 		"tag": "Component",
 		"title": "Simple Table",
 		"preview": "A simple sveltey table",
