@@ -17,12 +17,7 @@
 		"preview": "Make your links more shareable with Open Graph",
 		"url": "/blog/open-graph"
 	},
-	{
-		"tag": "Tool",
-		"title": "HTML to Image",
-		"preview": "Generating images with html-to-image",
-		"url": "/blog/html-to-image"
-	},
+
 	{
 		"tag": "Experiment",
 		"title": "Color Experiment",
