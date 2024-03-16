@@ -1,14 +1,27 @@
-//removing rollup for now.
-// import * as rollup from "@rollup/browser/dist/es/rollup.browser.js";
 import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browser.js';
 
-const CDN_URL = 'https://cdn.jsdelivr.net/npm';
-// const CDN_URL = "https://unpkg.com";
-var svelte;
-const version = '5.0.0-next.15';
-const component_lookup = new Map();
+const CDN_URL = 'https://unpkg.com';
+const svelte_url = 'https://unpkg.com/svelte@5.0.0-next.80';
 
+const component_lookup = new Map();
 const fetch_cache = new Map();
+const compile_cache = new Map();
+let svelteCompilerLoaded = false;
+
+let currentJobId = 0;
+async function initCompiler() {
+	try {
+		importScripts(`https://svelte-compiler.dashing.workers.dev/`);
+		svelteCompilerLoaded = true;
+	} catch {
+		await import(`https://svelte-compiler.dashing.workers.dev/`);
+		svelteCompilerLoaded = true;
+	}
+}
+async function follow_redirects(url) {
+	const res = await fetch_if_uncached(url);
+	return res.url;
+}
 
 async function fetch_if_uncached(url) {
 	if (fetch_cache.has(url)) {
@@ -34,122 +47,136 @@ async function fetch_if_uncached(url) {
 	return promise;
 }
 
-async function follow_redirects(url) {
-	const res = await fetch_if_uncached(url);
-	return res.url;
-}
-
 function generate_lookup(components) {
+	component_lookup.set('./__entry.js', {
+		name: '__entry',
+		source: `
+      export { mount, unmount, untrack } from 'svelte';
+      export { default as App } from './App.svelte';
+    `,
+		type: 'js',
+		modified: false
+	});
+
 	for (let i = 0; i < components.length; i++) {
 		component_lookup.set(`./${components[i].name}.${components[i].type}`, components[i]);
 	}
 }
 
+initCompiler();
 self.addEventListener('message', async (event) => {
-	// try {
-	// 	importScripts('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
-	// } catch {
-	// 	await import('https://cdn.jsdelivr.net/npm/svelte@3.52.0/compiler.js');
-	// }
-
-	try {
-		importScripts(`https://jspm.dev/npm:svelte@${version}/compiler`);
-	} catch {
-		// await import(`https://jspm.dev/npm:svelte@5.0.0-next.1/compiler`);
-		svelte = await import(`https://jspm.dev/npm:svelte@${version}/compiler`);
-		// await import(`https://jspm.dev/npm:svelte@${version}/compiler`);
+	if (!svelteCompilerLoaded) {
+		await initCompiler();
 	}
 
-	generate_lookup(event.data);
+	const { components, jobId } = event.data;
 
-	const bundle = await rollup.rollup({
-		input: './App.svelte',
-		plugins: [
-			{
-				name: 'repl-plugin',
-				async resolveId(importee, importer) {
-					// handle imports from 'svelte'
-					// import x from 'svelte'
-					if (importee === 'svelte') return `${CDN_URL}/svelte@${version}/index.js`;
+	currentJobId = jobId;
 
-					if (importee === 'svelte/internal') {
-						return `${CDN_URL}/svelte@${version}/src/internal/index.js`;
-					}
+	try {
+		importScripts(`https://svelte-compiler.dashing.workers.dev/`);
+	} catch {
+		await import(`https://svelte-compiler.dashing.workers.dev/`);
+	}
 
-					if (importee === 'esm-env') {
-						return `${CDN_URL}/esm-env@1.0.0/dev-browser.js`;
-					}
+	generate_lookup(components);
 
-					if (importee.startsWith('svelte/')) {
-						// import x from 'svelte/somewhere'
-						return `${CDN_URL}/svelte@${version}/src/${importee.slice(7)}.js`;
-					}
+	try {
+		if (jobId !== currentJobId) return;
 
-					// import x from './file.js' (via a 'svelte' or 'svelte/x' package)
-					if (importer && importer.startsWith(`${CDN_URL}/svelte` || importer == 'svelte')) {
-						const resolved = new URL(importee, importer).href;
-						if (resolved.endsWith('.js')) return resolved;
-						return `${resolved}/index.js`;
-					}
+		const bundle = await rollup.rollup({
+			input: './__entry.js',
+			plugins: [
+				{
+					name: 'repl-plugin',
+					async resolveId(importee, importer) {
+						// handle imports from 'svelte'
+						if (importee === 'svelte') return `${svelte_url}/src/main/main-client.js`;
+						if (importee === 'svelte/internal') return `${svelte_url}/src/internal/index.js`;
 
-					// local repl components
-					if (component_lookup.has(importee)) return importee;
-					if (component_lookup.has(`${importee}.js`)) return importee + '.js';
-					if (component_lookup.has(`${importee}.json`)) return importee + '.json';
+						if (importee.startsWith('svelte/')) {
+							const sub_path = importee.slice(7);
+							return `${svelte_url}/src/${sub_path}.js`;
+						}
 
-					// remove trailing slash
-					if (importee.endsWith('/')) importee = importee.slice(0, -1);
+						if (importee === 'esm-env') {
+							return `https://cdn.jsdelivr.net/npm/esm-env@1.0.0/dev-browser.js`;
+						}
 
-					// importing from a URL
-					if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
+						if (component_lookup.has(importee)) return importee;
+						if (component_lookup.has(`${importee}.js`)) return importee + '.js';
 
-					// relative imports from a remote package... Change to follow
-					//   if (importee.startsWith(".")) return new URL(importee, importer).href;
-					if (importee.startsWith('.')) {
-						const url = new URL(importee, importer).href;
-						return await follow_redirects(url);
-					}
+						if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
 
-					// bare named module imports (importing an npm package)
+						if (importee.startsWith('.')) {
+							if (importer && component_lookup.has(importer)) {
+								return new URL(importee, importer).href;
+							} else {
+								const url = new URL(importee, importer).href;
+								return await follow_redirects(url);
+							}
+						}
 
-					try {
-						const pkg_url = await follow_redirects(`${CDN_URL}/${importee}/package.json`);
-						const pkg_json = (await fetch_if_uncached(pkg_url)).body;
+						const pkg_url = `${CDN_URL}/${importee}/package.json`;
+						const pkg_json = await fetch_if_uncached(pkg_url).then((res) => res.body);
 						const pkg = JSON.parse(pkg_json);
 
-						if (pkg.svelte || pkg.module || pkg.main) {
-							const url = pkg_url.replace(/\/package\.json$/, '');
-							return new URL(pkg.svelte || pkg.module || pkg.main, `${url}/`).href;
+						if (pkg.svelte) {
+							return new URL(pkg.svelte, pkg_url.replace(/\/package\.json$/, '/')).href;
 						}
-					} catch (err) {
-						// ignore
+						if (pkg.module) {
+							return new URL(pkg.module, pkg_url.replace(/\/package\.json$/, '/')).href;
+						}
+						if (pkg.main) {
+							return new URL(pkg.main, pkg_url.replace(/\/package\.json$/, '/')).href;
+						}
+
+						return await follow_redirects(`${CDN_URL}/${importee}`);
+					},
+					async load(id) {
+						if (component_lookup.has(id)) return component_lookup.get(id).source;
+
+						const res = await fetch_if_uncached(id);
+						return res.body;
+					},
+					transform(code, id) {
+						if (!id.endsWith('.svelte')) return null;
+
+						// self.postMessage({ type: 'status', message: `Compiling ${id}` });
+
+						// Check the compile cache
+						const cached = compile_cache.get(id);
+						if (cached && cached.code === code) {
+							return cached.result;
+						}
+
+						const result = svelte.compile(code, {
+							filename: id,
+							generate: 'dom',
+							dev: true
+						});
+
+						if (result.css && result.css.code && result.css.code.trim() !== '') {
+							result.js.code += `
+                            const style = document.createElement('style');
+                            style.textContent = ${JSON.stringify(result.css.code)};
+                            document.head.appendChild(style);
+                        `;
+						}
+
+						// Update the compile cache
+						compile_cache.set(id, { code, result: result.js.code });
+
+						return result.js.code;
 					}
-
-					return await follow_redirects(`${CDN_URL}/${importee}`);
-				},
-				async load(id) {
-					// local repl components are stored in memory
-					// this is our virtual filesystem
-					if (component_lookup.has(id)) return component_lookup.get(id).source;
-
-					// everything else comes from a cdn
-
-					const res = await fetch_if_uncached(id);
-					return res.body;
-				},
-				transform(code, id) {
-					// our only transform is to compile svelte components
-					//@ts-ignore
-
-					// if (/.*\.svelte/.test(id)) return svelte.compile(code).js.code;
-					if (/.*\.svelte/.test(id)) return svelte.compile(code).js.code;
 				}
-			}
-		]
-	});
+			]
+		});
+		if (jobId !== currentJobId) return;
 
-	// a touch longwinded but output contains an array of chunks
-	// we are not code-splitting, so we only have a single chunk
-	const output = (await bundle.generate({ format: 'esm' })).output[0].code;
-	self.postMessage(output);
+		const output = (await bundle.generate({ format: 'esm' }))?.output?.[0];
+		self.postMessage(output);
+	} catch (error) {
+		self.postMessage(error);
+	}
 });

@@ -2,9 +2,6 @@
 	import { browser } from '$app/environment';
 	import { onMount, onDestroy } from 'svelte';
 
-	// import { yCollab, yUndoManagerKeymap } from "y-codemirror.next";
-	// import { ymap, provider } from '$lib/stores';
-
 	import { EditorView, basicSetup } from 'codemirror';
 	import { ViewPlugin, ViewUpdate } from '@codemirror/view';
 	import { code_theme } from './theme';
@@ -16,28 +13,31 @@
 	import { tags } from '@lezer/highlight';
 	import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 
-	let editor, view, state;
-	let current = 0;
-	export let components = [
-		{
-			id: 1,
-			name: `App`,
-			type: 'svelte',
-			source: ''
-		}
-	];
+	let editor = $state();
+	let view = $state();
+	let editor_state = $state();
+	let {
+		components = [
+			{
+				id: 1,
+				name: `App`,
+				type: 'svelte',
+				source: ''
+			}
+		],
+		current = 0
+	} = $props();
 
 	const listen_updates = (update) => {
 		if (update.docChanged) {
 			const source = view.state.doc.toString();
 			components[current].source = source;
+			console.log('source: ', source, components);
+			components = components;
 		}
 	};
 
-	export const userColor = { color: '#30bced', light: '#30bced33' };
-
-	// export const userColor = usercolors[random.uint32() % usercolors.length];
-	function get_extensions(source) {
+	function get_extensions() {
 		let extensions = [
 			// keymap.of([...yUndoManagerKeymap]),
 			basicSetup,
@@ -104,19 +104,17 @@
 				])
 			)
 		];
-		// if ($provider) extensions.push(yCollab(source, $provider.awareness));
-		// else extensions.push(yCollab(source));
 
 		return extensions;
 	}
 
 	onMount(() => {
-		// components = $ymap.get(yid);
 		create_codemirror();
 	});
 	onDestroy(() => {
 		if (view) view.destroy();
 	});
+
 	function create_codemirror() {
 		if (!browser) return;
 
@@ -125,31 +123,24 @@
 		if (editor) {
 			const file = components[0];
 			const source = file.source;
-
-			state = EditorState.create({
+			editor_state = EditorState.create({
 				doc: source.toString(),
 				extensions: get_extensions(source)
 			});
 
 			view = new EditorView({
-				state,
+				state: editor_state,
 				parent: editor
 			});
 		}
 	}
 
-	export function update_editor_source(i) {
+	function update_editor_source(i) {
 		if (components.length < 1) return;
 		current = i;
 		const file = components[i];
 		const source = file.source;
 
-		// view.setState(
-		// 	EditorState.create({
-		// 		doc: source.toString()
-		// 		// extensions: get_extensions(source)
-		// 	})
-		// );
 		const tr = view.state.update({
 			changes: {
 				from: 0,
@@ -160,6 +151,8 @@
 
 		view.dispatch(tr);
 	}
+
+	$effect(() => update_editor_source(current));
 </script>
 
 <div bind:this={editor} class="text-base sm:text-sm flex-1 overflow-scroll" />

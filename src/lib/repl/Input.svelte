@@ -2,11 +2,10 @@
 	import Tabs from './Tabs.svelte';
 	import CodeMirror from './CodeMirror.svelte';
 
-	export let components = [];
-	export let current = 1;
-	export let tabs = true;
+	let { components = [], current = 1, tabs = true } = $props();
 
-	let codemirror, current_component;
+	let codemirror;
+	let current_component = $state(0);
 
 	function get_max(_components) {
 		const ids = _components.map(({ id }) => id);
@@ -32,7 +31,9 @@
 
 	// use uuid for id in case of collision.
 
-	$: tabs = components.map(({ id, name, type }) => ({ id, name, type }));
+	$effect(() => {
+		tabs = components.map(({ id, name, type }) => ({ id, name, type }));
+	});
 </script>
 
 <section class="flex flex-col h-full overflow-scroll w-full">
@@ -40,14 +41,12 @@
 		{tabs}
 		{current}
 		on:select={({ detail }) => {
-			current = detail;
-			const current_component = components.findIndex(({ id }) => id === current);
-			codemirror.update_editor_source(current_component);
+			current_component = components.findIndex(({ id }) => id === detail);
 		}}
 		on:new={new_component}
 		on:remove={remove_component}
 	/>
 	<div class="grow bg-slate-900 relative">
-		<CodeMirror bind:this={codemirror} bind:current_component bind:components />
+		<CodeMirror bind:this={codemirror} bind:current={current_component} bind:components />
 	</div>
 </section>

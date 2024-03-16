@@ -1,14 +1,13 @@
 <script>
-	export let compiled;
+	let { compiled } = $props();
 	import srcdoc from './srcdoc/index.html?raw';
 
 	let iframe;
 
-	function update(code) {
-		iframe.contentWindow.postMessage(code, '*');
-	}
-
-	$: iframe && compiled && update(compiled);
+	$effect(() => {
+		if (compiled === undefined) return;
+		iframe.contentWindow.postMessage({ type: 'compile', data: compiled }, '*');
+	});
 </script>
 
 <section class="h-full w-full bg-white">

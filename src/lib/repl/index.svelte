@@ -1,43 +1,32 @@
 <script>
-	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import Input from './Input.svelte';
 	import Output from './Output.svelte';
 
 	// export let embed = false;
-	let input_w = 50;
-	let output_w = 50;
-	let resize = false;
 	let resize_bar;
-	let current = 1;
-	let worker, compiled;
-	let input_output_toggle = true;
-	let innerWidth;
-	export let content = [
-		{
-			id: 1,
-			name: `App`,
-			type: 'svelte',
-			source: ''
-		}
-	];
+	let worker;
 
-	$: if (innerWidth < 640) {
-		if (input_w * output_w != 0) {
-			input_output_toggle = true;
-			input_w = 100;
-			output_w = 0;
-		}
-	}
+	let input_w = $state(50);
+	let output_w = $derived(100 - input_w);
+	let resize = $state(false);
+	let current = $state(1);
+	let compiled = $state.frozen();
+	let input_output_toggle = $state(true);
+	let innerWidth = $state(0);
+	let jobId = 0;
+	let {
+		components = [
+			{
+				id: 1,
+				name: `App`,
+				type: 'svelte',
+				source: 'hello world'
+			}
+		]
+	} = $props();
 
-	$: if (innerWidth > 640) {
-		if (input_w * output_w == 0) {
-			input_w = 50;
-			output_w = 50;
-		}
-	}
-
-	onMount(async () => {
+	$effect(async () => {
 		if (!browser) return;
 
 		let url = new URL('./worker.js', import.meta.url);
@@ -46,14 +35,29 @@
 			type: 'module'
 		});
 
-		worker.addEventListener('message', (event) => {
-			compiled = event.data;
-		});
+		worker.addEventListener('message', (event) => {});
 	});
 
 	function compile(_components) {
-		if (worker) worker.postMessage(_components);
+		jobId++;
+
+		const componentsArray = [..._components];
+		const clonableComponents = componentsArray.map((component) => {
+			return {
+				id: component.id,
+				name: component.name,
+				type: component.type,
+				source: component.source
+			};
+		});
+
+		if (!worker) return;
+
+		if (worker) {
+			worker.postMessage({ components: clonableComponents, jobId });
+		}
 	}
+
 	function handle_pointerdown(e) {
 		resize = true;
 		resize_bar.setPointerCapture(e.pointerId);
@@ -61,7 +65,6 @@
 		resize_bar.addEventListener('pointermove', (e) => {
 			if (!resize) return;
 			input_w = (e.clientX / window.innerWidth) * 100;
-			output_w = 100 - input_w;
 		});
 		resize_bar.addEventListener(
 			'pointerup',
@@ -72,8 +75,7 @@
 			{ once: true }
 		);
 	}
-
-	$: compile(content);
+	$effect(() => compile(components));
 </script>
 
 <svelte:head>
@@ -87,8 +89,13 @@
 <div class="w-full relative shadow-sm grow flex flex-col not-prose h-full">
 	<div class="overflow-scroll grow flex flex-col">
 		<div class="inline-flex w-full grow">
-			<div style="width:{input_w}%;" class="max-h-screen overflow-scroll pb-[40px] sm:pb-0">
-				<Input bind:components={content} bind:current />
+			<div
+				style="width:{input_w}%;"
+				class="max-h-screen overflow-scroll pb-[40px] sm:pb-0 {input_output_toggle
+					? 'toggle-full'
+					: 'hide'}"
+			>
+				<Input bind:components bind:current />
 			</div>
 			<div
 				bind:this={resize_bar}
@@ -96,7 +103,7 @@
 				class="bg-slate-700 h-full w-1 cursor-col-resize absolute hidden sm:block"
 				style="left:{input_w}%; margin-left:-4px;"
 			/>
-			<div style="width:{output_w}%">
+			<div style="width:{output_w}%" class={input_output_toggle ? 'hide' : 'toggle-full'}>
 				<Output {compiled} />
 			</div>
 		</div>
@@ -108,8 +115,6 @@
 				on:doubleclick|preventDefault
 				on:click|preventDefault={() => {
 					input_output_toggle = !input_output_toggle;
-					input_w = input_output_toggle * 100;
-					output_w = !input_output_toggle * 100;
 				}}
 				type="button"
 				class="{input_output_toggle ? 'bg-slate-200' : 'bg-blue-400'} 
@@ -129,3 +134,51 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	:root {
+		--input-width: 50%;
+		--output-width: 50%;
+	}
+
+	@media (max-width: 639px) {
+		.toggle-visible {
+			display: block;
+		}
+
+		.input-section,
+		.output-section {
+			width: 100%;
+		}
+
+		.resize-bar {
+			display: none;
+		}
+		.toggle-full {
+			width: 100% !important;
+		}
+		.hide {
+			display: none;
+		}
+	}
+
+	@media (min-width: 640px) {
+		.input-section {
+			width: var(--input-width);
+		}
+
+		.output-section {
+			width: var(--output-width);
+		}
+
+		.toggle-visible {
+			display: none;
+		}
+	}
+
+	.resize-bar {
+		cursor: col-resize;
+		width: 5px; /* Adjust the width of the resize bar here */
+		background-color: #333; /* Resize bar color */
+	}
+</style>

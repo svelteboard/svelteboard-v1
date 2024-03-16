@@ -1,74 +1,76 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<style>
-			html,
-			body {
-				height: 100%;
-				width: 100%;
-				margin: 0;
-				padding: 0;
-			}
-		</style>
+		<script>
+			let __unmount_previous;
 
-		<script type="module">
-			import { n as mount } from 'https://jspm.dev/npm:svelte@5.0.0-next.11/_/ItiZK9df.js';
-
-			let currentAppCleanup = null;
-			let app = null;
-
-			function cleanupPreviousApp() {
-				if (currentAppCleanup) {
-					currentAppCleanup();
-					currentAppCleanup = null;
-				}
-
-				const styles = document.querySelectorAll('style[id^="svelte-"]');
-				styles.forEach((style) => style.remove());
-
-				if (app) {
-					app = null;
-				}
+			function sendMessage(type, data) {
+				window.parent.postMessage({ type, data }, '*');
 			}
 
-			function update(source) {
-				console.log('update');
-				cleanupPreviousApp();
+			async function load_component(compiledCode) {
+				try {
+					// Create a Blob from the compiled code
+					const blob = new Blob([compiledCode], { type: 'application/javascript' });
+					const url = URL.createObjectURL(blob);
 
-				// Create a container for the Svelte component
-				const container = document.createElement('div');
-				document.body.appendChild(container);
+					// Dynamically import the Svelte module from the Blob URL
+					const module = await import(url);
 
-				// Mount the new component
-				const blob = new Blob([source], { type: 'text/javascript' });
-				const url = URL.createObjectURL(blob);
-				console.log(url);
+					// Extract the exported values from the module
+					const { mount, unmount, App, untrack } = module;
 
-				import(url)
-					.then(({ default: App }) => {
-						console.log(App);
-						// const [accessors, destroy] = mount(App, { target: container });
-						const app = mount(App, { target: document.getElementById('app') });
-						console.log(app);
-						// currentAppCleanup = destroy;
-					})
-					.catch((error) => {
-						console.error('Error mounting component:', error);
-					});
+					// Revoke the Blob URL when no longer needed
+					URL.revokeObjectURL(url);
+
+					// Remove any existing Svelte styles
+					const styles = document.querySelectorAll('style[id^=svelte-]');
+					let i = styles.length;
+					while (i--) styles[i].parentNode.removeChild(styles[i]);
+
+					// Unmount the previous component if it exists
+					if (__unmount_previous) {
+						try {
+							__unmount_previous();
+						} catch (err) {
+							console.error('Error unmounting previous component:', err);
+							sendMessage('error', 'Error unmounting previous component: ' + err.message);
+						}
+					}
+
+					// Clear the document body
+					document.body.innerHTML = '';
+
+					// Mount the new component
+					const app = mount(App, { target: document.body });
+
+					// Store the unmount function for the current component
+					__unmount_previous = unmount;
+				} catch (error) {
+					console.error('Error evaluating Svelte component:', error);
+					sendMessage('error', 'Error evaluating Svelte component: ' + error.message);
+				}
 			}
 
 			window.addEventListener(
 				'message',
 				(event) => {
-					console.log('window event listener');
-					update(event.data);
+					const { type, data } = event.data;
+					if (type === 'compile') {
+						// Check if the compiled code is a string
+						console.log('Loading component', data);
+
+						if (typeof data.code === 'string') {
+							load_component(data.code);
+						} else {
+							// sendMessage('error', 'Invalid compiled code format');
+						}
+					}
 				},
 				false
 			);
 		</script>
-		<!-- <script src="https://cdn.tailwindcss.com"></script> -->
+		<script src="https://cdn.tailwindcss.com"></script>
 	</head>
-	<body>
-		<div id="app"></div>
-	</body>
+	<body></body>
 </html>

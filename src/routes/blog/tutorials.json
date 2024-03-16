@@ -1,0 +1,56 @@
+[
+	{
+		"tag": "Video",
+		"title": "Svnotion",
+		"preview": "Building a Notion editor clone with Svelte, Tiptap, and Tailwind.",
+		"url": "/blog/svnotion"
+	},
+	{
+		"tag": "Tool",
+		"title": "Stripe Checkout Playground",
+		"preview": "Stripe playground to test the Stripe Checkout API.",
+		"url": "/blog/stripe/checkout"
+	},
+	{
+		"tag": "Tool",
+		"title": "Open Graph",
+		"preview": "Make your links more shareable with Open Graph",
+		"url": "/blog/open-graph"
+	},
+	{
+		"tag": "Tool",
+		"title": "HTML to Image",
+		"preview": "Generating images with html-to-image",
+		"url": "/blog/html-to-image"
+	},
+	{
+		"tag": "Experiment",
+		"title": "Color Experiment",
+		"preview": "Using Mix Blend to Fine Tune Your Color Pallet",
+		"url": "/blog/color-experiment"
+	},
+	{
+		"tag": "Hugging Face",
+		"title": "Introduction to the 🤗 Accelerated Inference API in Svelte",
+		"preview": "Hugging Face is the easiest way to build, train, and deploy machine learning models.",
+		"url": "/blog/huggingface"
+	},
+	{
+		"tag": "Hugging Face",
+		"title": "Text to Speech with the Hugging Face Inference API",
+		"preview": "Generate speech from text with the Hugging Face Inference API.",
+		"url": "/blog/huggingface/text-to-speech"
+	},
+	{
+		"tag": "Component",
+		"title": "Simple Table",
+		"preview": "A simple sveltey table",
+		"url": "/blog/simple-table"
+	},
+	{
+		"tag": "REPL",
+		"title": "REPL Scratchpad",
+		"preview": "Getting started with SvelteKit and Tailwind.",
+		"url": "/blog/repl"
+	}
+]
