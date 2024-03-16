@@ -3,7 +3,6 @@
 	import { onMount, onDestroy } from 'svelte';
 
 	import { EditorView, basicSetup } from 'codemirror';
-	import { ViewPlugin, ViewUpdate } from '@codemirror/view';
 	import { code_theme } from './theme';
 	// import { javascript } from "@codemirror/lang-javascript";
 	// import { html } from "@codemirror/lang-html";
