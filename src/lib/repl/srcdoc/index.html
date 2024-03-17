@@ -56,9 +56,9 @@
 				'message',
 				(event) => {
 					const { type, data } = event.data;
-					if (type === 'compile') {
+
+					if (type === 'update') {
 						// Check if the compiled code is a string
-						console.log('Loading component', data);
 
 						if (typeof data.code === 'string') {
 							load_component(data.code);

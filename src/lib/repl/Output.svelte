@@ -1,12 +1,12 @@
 <script>
-	let { compiled } = $props();
+	let { on_update_output } = $props();
 	import srcdoc from './srcdoc/index.html?raw';
 
 	let iframe;
 
-	$effect(() => {
+	on_update_output((compiled) => {
 		if (compiled === undefined) return;
-		iframe.contentWindow.postMessage({ type: 'compile', data: compiled }, '*');
+		iframe.contentWindow.postMessage({ type: 'update', data: compiled }, '*');
 	});
 </script>
 

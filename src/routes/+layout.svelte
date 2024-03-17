@@ -129,7 +129,7 @@
 				on:click={() => (mobile_menu_open = false)}
 			/>
 			<nav class="relative z-10 px-9 pt-8 bg-forest-900 h-full overflow-y-auto">
-				<div class="absolute h-full w-full top-0 le ft-0 bg-[url('/noise.png')] opacity-5 z-0" />
+				<div class="absolute h-full w-full top-0 left-0 bg-[url('/noise.png')] opacity-5 z-0" />
 				<div class="flex flex-wrap justify-between h-full z-10 relative">
 					<div class="w-full">
 						<div class="flex items-center justify-between -m-2">

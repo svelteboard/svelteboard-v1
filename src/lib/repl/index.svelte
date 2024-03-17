@@ -2,6 +2,7 @@
 	import { browser } from '$app/environment';
 	import Input from './Input.svelte';
 	import Output from './Output.svelte';
+	import { CreateRepl } from './CreateRepl.svelte.js';
 
 	// export let embed = false;
 	let resize_bar;
@@ -18,45 +19,14 @@
 	let {
 		components = [
 			{
-				id: 1,
+				id: 0,
 				name: `App`,
 				type: 'svelte',
 				source: 'hello world'
 			}
 		]
 	} = $props();
-
-	$effect(async () => {
-		if (!browser) return;
-
-		let url = new URL('./worker.js', import.meta.url);
-
-		worker = new Worker(url.href, {
-			type: 'module'
-		});
-
-		worker.addEventListener('message', (event) => {});
-	});
-
-	function compile(_components) {
-		jobId++;
-
-		const componentsArray = [..._components];
-		const clonableComponents = componentsArray.map((component) => {
-			return {
-				id: component.id,
-				name: component.name,
-				type: component.type,
-				source: component.source
-			};
-		});
-
-		if (!worker) return;
-
-		if (worker) {
-			worker.postMessage({ components: clonableComponents, jobId });
-		}
-	}
+	let Repl = new CreateRepl(components);
 
 	function handle_pointerdown(e) {
 		resize = true;
@@ -75,7 +45,6 @@
 			{ once: true }
 		);
 	}
-	$effect(() => compile(components));
 </script>
 
 <svelte:head>
@@ -95,16 +64,16 @@
 					? 'toggle-full'
 					: 'hide'}"
 			>
-				<Input bind:components bind:current />
+				<Input {Repl} />
 			</div>
 			<div
 				bind:this={resize_bar}
-				on:pointerdown={handle_pointerdown}
+				onpointerdown={handle_pointerdown}
 				class="bg-slate-700 h-full w-1 cursor-col-resize absolute hidden sm:block"
 				style="left:{input_w}%; margin-left:-4px;"
 			/>
 			<div style="width:{output_w}%" class={input_output_toggle ? 'hide' : 'toggle-full'}>
-				<Output {compiled} />
+				<Output on_update_output={Repl.on_update_output} />
 			</div>
 		</div>
 	</div>
@@ -112,8 +81,12 @@
 		<div class="m-auto flex max-w-xs">
 			Input
 			<button
-				on:doubleclick|preventDefault
-				on:click|preventDefault={() => {
+				ondoubleclick={(e) => {
+					e.preventDefault();
+					input_output_toggle = !input_output_toggle;
+				}}
+				onclick={(e) => {
+					e.preventDefault();
 					input_output_toggle = !input_output_toggle;
 				}}
 				type="button"

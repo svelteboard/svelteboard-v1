@@ -1,5 +1,6 @@
 <script>
 	import { browser } from '$app/environment';
+
 	import { onMount, onDestroy } from 'svelte';
 
 	import { EditorView, basicSetup } from 'codemirror';
@@ -15,24 +16,27 @@
 	let editor = $state();
 	let view = $state();
 	let editor_state = $state();
-	let {
-		components = [
-			{
-				id: 1,
-				name: `App`,
-				type: 'svelte',
-				source: ''
-			}
-		],
-		current = 0
-	} = $props();
+	let source = '';
+	let { on_update_tab, update_source } = $props();
 
+	on_update_tab((_source) => update_editor_source(_source));
+
+	function update_editor_source(_source) {
+		if (!view) return (source = _source);
+
+		const tr = view.state.update({
+			changes: {
+				from: 0,
+				to: view.state.doc.length,
+				insert: _source
+			}
+		});
+
+		view.dispatch(tr);
+	}
 	const listen_updates = (update) => {
 		if (update.docChanged) {
-			const source = view.state.doc.toString();
-			components[current].source = source;
-			console.log('source: ', source, components);
-			components = components;
+			update_source(view.state.doc.toString());
 		}
 	};
 
@@ -116,12 +120,9 @@
 
 	function create_codemirror() {
 		if (!browser) return;
-
 		if (view) view.destroy();
 
 		if (editor) {
-			const file = components[0];
-			const source = file.source;
 			editor_state = EditorState.create({
 				doc: source.toString(),
 				extensions: get_extensions(source)
@@ -134,24 +135,25 @@
 		}
 	}
 
-	function update_editor_source(i) {
-		if (components.length < 1) return;
-		current = i;
-		const file = components[i];
-		const source = file.source;
+	// let index;
+	// function update_editor_source(i) {
+	// 	if (index === i) return;
+	// 	if (components.length < 1) return;
 
-		const tr = view.state.update({
-			changes: {
-				from: 0,
-				to: view.state.doc.length,
-				insert: source
-			}
-		});
+	// 	const tr = view.state.update({
+	// 		changes: {
+	// 			from: 0,
+	// 			to: view.state.doc.length,
+	// 			insert: source
+	// 		}
+	// 	});
 
-		view.dispatch(tr);
-	}
+	// 	view.dispatch(tr);
 
-	$effect(() => update_editor_source(current));
+	// }
+	// $effect(() => {
+	// 	update_editor_source(current);
+	// });
 </script>
 
 <div bind:this={editor} class="text-base sm:text-sm flex-1 overflow-scroll" />

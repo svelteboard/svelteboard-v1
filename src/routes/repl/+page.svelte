@@ -1,8 +1,8 @@
 <script>
 	import Repl from '$lib/repl/index.svelte';
-	let components = $state([
+	let components = [
 		{
-			id: 1,
+			id: 0,
 			name: `App`,
 			type: 'svelte',
 			source: `<script>
@@ -17,7 +17,7 @@
 	clicks: {count}
 </button>`
 		}
-	]);
+	];
 </script>
 
-<Repl bind:components />
+<Repl {components} />
