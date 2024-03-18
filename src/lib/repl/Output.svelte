@@ -6,7 +6,9 @@
 
 	on_update_output((compiled) => {
 		if (compiled === undefined) return;
-		iframe.contentWindow.postMessage({ type: 'update', data: compiled }, '*');
+		if (compiled.type === 'output') {
+			return iframe.contentWindow.postMessage({ type: 'update', data: compiled.message }, '*');
+		}
 	});
 </script>
 

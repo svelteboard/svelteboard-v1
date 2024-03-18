@@ -27,6 +27,7 @@ async function fetch_if_uncached(url) {
 	if (fetch_cache.has(url)) {
 		return fetch_cache.get(url);
 	}
+	// self.postMessage({ type: 'status', message: `Fetching ${url}` });
 
 	const promise = fetch(url)
 		.then(async (r) => {
@@ -175,7 +176,8 @@ self.addEventListener('message', async (event) => {
 		if (jobId !== currentJobId) return;
 
 		const output = (await bundle.generate({ format: 'esm' }))?.output?.[0];
-		self.postMessage(output);
+		// self.postMessage(output);
+		self.postMessage({ type: 'output', message: output });
 	} catch (error) {
 		self.postMessage(error);
 	}

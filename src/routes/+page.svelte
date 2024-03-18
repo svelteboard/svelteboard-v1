@@ -1,3 +1,25 @@
+<script>
+	import Repl from '$lib/repl/index.svelte';
+	let components = [
+		{
+			id: 0,
+			name: `App`,
+			type: 'svelte',
+			source: `<script>
+	let count = $state(0);
+
+	function increment() {
+		count += 1;
+	}
+<\/script>
+
+<button class="m-4 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50" onclick={increment}>
+	clicks: {count}
+</button>`
+		}
+	];
+</script>
+
 <section class="relative pt-12 md:pt-24 bg-forest-900">
 	<div class="absolute h-full w-full top-0 le ft-0 bg-[url('/noise.png')] opacity-5 z-0" />
 	<div class="text-center mb-24 z-10 relative">
@@ -45,5 +67,11 @@
 		<p class="text-lg text-gray-300">
 			Our goal is to make shipping a little faster, easier, and more fun.
 		</p>
+	</div>
+</section>
+
+<section class="max-w-[1040px] w-full m-auto my-12 p-4 h-[640px] max-h-screen">
+	<div class="rounded-md border shadow-sm overflow-clip h-full">
+		<Repl {components} />
 	</div>
 </section>
