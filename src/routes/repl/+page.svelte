@@ -20,4 +20,15 @@
 	];
 </script>
 
+<svelte:head>
+	<title>Repl | Svelteboard</title>
+	<meta name="description" content="Svelte 5 Repl. Try out Svelte code in the browser." />
+	<meta
+		name="keywords"
+		content="svelte, svelteboard, svelte tutorials, svelte resources, svelte tools, svelte repl"
+	/>
+	<meta name="author" content="Svelteboard" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+</svelte:head>
+
 <Repl {components} />

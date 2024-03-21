@@ -3,7 +3,17 @@
 </script>
 
 <svelte:head>
-	<title>Tutorials</title>
+	<title>Blog - Svelteboard</title>
+	<meta
+		name="description"
+		content="Read the latest Svelte tutorials, tools, and resources on Svelteboard."
+	/>
+	<meta
+		name="keywords"
+		content="svelte, svelteboard, svelte tutorials, svelte resources, svelte tools, svelte repl"
+	/>
+	<meta name="author" content="Svelteboard" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 </svelte:head>
 
 <div class="max-w-7xl m-auto pt-16 pb-20 px-4 sm:px-6 lg:pt-24 lg:pb-28 lg:px-8">

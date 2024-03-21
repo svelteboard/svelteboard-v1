@@ -20,6 +20,20 @@
 	];
 </script>
 
+<svelte:head>
+	<title>Svelteboard - Svelte Tutorials</title>
+	<meta
+		name="description"
+		content="Svelteboard is a collection of tutorials, tools, and resources for to help you learn Svelte."
+	/>
+	<meta
+		name="keywords"
+		content="svelte, svelteboard, svelte tutorials, svelte resources, svelte tools, svelte repl"
+	/>
+	<meta name="author" content="Svelteboard" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+</svelte:head>
+
 <section class="relative pt-12 md:pt-24 bg-forest-900">
 	<div class="absolute h-full w-full top-0 le ft-0 bg-[url('/noise.png')] opacity-5 z-0" />
 	<div class="text-center mb-24 z-10 relative">
