@@ -2,6 +2,7 @@ import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browse
 
 const CDN_URL = 'https://unpkg.com';
 const svelte_url = 'https://unpkg.com/svelte@5.0.0-next.80';
+const SVELTE_COMPILER_URL = 'https://svelte-compiler.cofocuslabs.workers.dev/';
 
 const component_lookup = new Map();
 const fetch_cache = new Map();
@@ -11,10 +12,10 @@ let svelteCompilerLoaded = false;
 let currentJobId = 0;
 async function initCompiler() {
 	try {
-		importScripts(`https://svelte-compiler.dashing.workers.dev/`);
+		importScripts(SVELTE_COMPILER_URL);
 		svelteCompilerLoaded = true;
 	} catch {
-		await import(`https://svelte-compiler.dashing.workers.dev/`);
+		await import(SVELTE_COMPILER_URL);
 		svelteCompilerLoaded = true;
 	}
 }
@@ -75,9 +76,9 @@ self.addEventListener('message', async (event) => {
 	currentJobId = jobId;
 
 	try {
-		importScripts(`https://svelte-compiler.dashing.workers.dev/`);
+		importScripts(SVELTE_COMPILER_URL);
 	} catch {
-		await import(`https://svelte-compiler.dashing.workers.dev/`);
+		await import(SVELTE_COMPILER_URL);
 	}
 
 	generate_lookup(components);
