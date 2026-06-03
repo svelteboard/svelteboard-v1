@@ -1,4 +1,5 @@
 import { browser } from '$app/environment';
+import CompilerWorker from './worker.js?worker';
 
 export class CreateRepl {
 	current = $state(0);
@@ -32,8 +33,7 @@ export class CreateRepl {
 	initializeWorker() {
 		if (!browser) return;
 
-		let url = new URL('./worker.js', import.meta.url);
-		this.worker = new Worker(url.href, { type: 'module' });
+		this.worker = new CompilerWorker({ type: 'module' });
 		this.worker.addEventListener('message', this.handleWorkerMessage.bind(this));
 	}
 
