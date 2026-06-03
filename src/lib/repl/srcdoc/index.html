@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 	<head>
 		<script>
@@ -8,8 +8,18 @@
 				window.parent.postMessage({ type, data }, '*');
 			}
 
+			function wait_for_body() {
+				if (document.body) return Promise.resolve();
+
+				return new Promise((resolve) => {
+					window.addEventListener('DOMContentLoaded', resolve, { once: true });
+				});
+			}
+
 			async function load_component(compiledCode) {
 				try {
+					await wait_for_body();
+
 					// Create a Blob from the compiled code
 					const blob = new Blob([compiledCode], { type: 'application/javascript' });
 					const url = URL.createObjectURL(blob);
@@ -45,7 +55,7 @@
 					const app = mount(App, { target: document.body });
 
 					// Store the unmount function for the current component
-					__unmount_previous = unmount;
+					__unmount_previous = () => unmount(app);
 				} catch (error) {
 					console.error('Error evaluating Svelte component:', error);
 					sendMessage('error', 'Error evaluating Svelte component: ' + error.message);

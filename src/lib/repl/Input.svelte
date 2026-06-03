@@ -5,8 +5,6 @@
 	// let { components = [], current = 1, tabs = true } = $props();
 	let { Repl } = $props();
 
-	let current_component = $state(0);
-
 	// function get_max(_components) {
 	// 	const ids = _components.map(({ id }) => id);
 	// 	return Math.max(...ids);

@@ -1,21 +1,16 @@
 <script>
-	import { browser } from '$app/environment';
 	import Input from './Input.svelte';
 	import Output from './Output.svelte';
 	import { CreateRepl } from './CreateRepl.svelte.js';
 
 	// export let embed = false;
 	let resize_bar;
-	let worker;
 
 	let input_w = $state(50);
 	let output_w = $derived(100 - input_w);
 	let resize = $state(false);
-	let current = $state(1);
-	let compiled = $state.frozen();
 	let input_output_toggle = $state(true);
 	let innerWidth = $state(0);
-	let jobId = 0;
 	let {
 		components = [
 			{

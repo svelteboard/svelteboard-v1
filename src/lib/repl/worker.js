@@ -1,53 +1,12 @@
-import * as rollup from 'https://unpkg.com/@rollup/browser/dist/es/rollup.browser.js';
+import * as rollup from '@rollup/browser';
+import * as svelte from 'svelte/compiler';
 
-const CDN_URL = 'https://unpkg.com';
-const svelte_url = 'https://unpkg.com/svelte@5.0.0-next.80';
-const SVELTE_COMPILER_URL = 'https://svelte-compiler.cofocuslabs.workers.dev/';
+const CDN_URL = 'https://esm.sh';
 
 const component_lookup = new Map();
-const fetch_cache = new Map();
 const compile_cache = new Map();
-let svelteCompilerLoaded = false;
 
 let currentJobId = 0;
-async function initCompiler() {
-	try {
-		importScripts(SVELTE_COMPILER_URL);
-		svelteCompilerLoaded = true;
-	} catch {
-		await import(SVELTE_COMPILER_URL);
-		svelteCompilerLoaded = true;
-	}
-}
-async function follow_redirects(url) {
-	const res = await fetch_if_uncached(url);
-	return res.url;
-}
-
-async function fetch_if_uncached(url) {
-	if (fetch_cache.has(url)) {
-		return fetch_cache.get(url);
-	}
-	// self.postMessage({ type: 'status', message: `Fetching ${url}` });
-
-	const promise = fetch(url)
-		.then(async (r) => {
-			if (r.ok) {
-				return {
-					url: r.url,
-					body: await r.text()
-				};
-			}
-			throw new Error(await r.text());
-		})
-		.catch((err) => {
-			fetch_cache.delete(url);
-			throw err;
-		});
-
-	fetch_cache.set(url, promise);
-	return promise;
-}
 
 function generate_lookup(components) {
 	component_lookup.set('./__entry.js', {
@@ -65,21 +24,10 @@ function generate_lookup(components) {
 	}
 }
 
-initCompiler();
 self.addEventListener('message', async (event) => {
-	if (!svelteCompilerLoaded) {
-		await initCompiler();
-	}
-
 	const { components, jobId } = event.data;
 
 	currentJobId = jobId;
-
-	try {
-		importScripts(SVELTE_COMPILER_URL);
-	} catch {
-		await import(SVELTE_COMPILER_URL);
-	}
 
 	generate_lookup(components);
 
@@ -93,53 +41,37 @@ self.addEventListener('message', async (event) => {
 					name: 'repl-plugin',
 					async resolveId(importee, importer) {
 						// handle imports from 'svelte'
-						if (importee === 'svelte') return `${svelte_url}/src/main/main-client.js`;
-						if (importee === 'svelte/internal') return `${svelte_url}/src/internal/index.js`;
-
-						if (importee.startsWith('svelte/')) {
-							const sub_path = importee.slice(7);
-							return `${svelte_url}/src/${sub_path}.js`;
+						if (importee === 'svelte' || importee.startsWith('svelte/')) {
+							return external(get_svelte_runtime_url(importee));
 						}
 
 						if (importee === 'esm-env') {
-							return `https://cdn.jsdelivr.net/npm/esm-env@1.0.0/dev-browser.js`;
+							return external(`${CDN_URL}/esm-env@1.0.0/dev-browser.js`);
 						}
 
 						if (component_lookup.has(importee)) return importee;
 						if (component_lookup.has(`${importee}.js`)) return importee + '.js';
 
-						if (importee.startsWith('http:') || importee.startsWith('https:')) return importee;
+						if (importee.startsWith('http:') || importee.startsWith('https:')) {
+							return external(importee);
+						}
+
+						if (importer && /^https?:/.test(importer) && importee.startsWith('/')) {
+							return external(new URL(importee, importer).href);
+						}
+
+						if (importer && /^https?:/.test(importer) && importee.startsWith('.')) {
+							return external(new URL(importee, importer).href);
+						}
 
 						if (importee.startsWith('.')) {
-							if (importer && component_lookup.has(importer)) {
-								return new URL(importee, importer).href;
-							} else {
-								const url = new URL(importee, importer).href;
-								return await follow_redirects(url);
-							}
+							return resolve_local_import(importee, importer);
 						}
 
-						const pkg_url = `${CDN_URL}/${importee}/package.json`;
-						const pkg_json = await fetch_if_uncached(pkg_url).then((res) => res.body);
-						const pkg = JSON.parse(pkg_json);
-
-						if (pkg.svelte) {
-							return new URL(pkg.svelte, pkg_url.replace(/\/package\.json$/, '/')).href;
-						}
-						if (pkg.module) {
-							return new URL(pkg.module, pkg_url.replace(/\/package\.json$/, '/')).href;
-						}
-						if (pkg.main) {
-							return new URL(pkg.main, pkg_url.replace(/\/package\.json$/, '/')).href;
-						}
-
-						return await follow_redirects(`${CDN_URL}/${importee}`);
+						return external(`${CDN_URL}/${importee}`);
 					},
 					async load(id) {
 						if (component_lookup.has(id)) return component_lookup.get(id).source;
-
-						const res = await fetch_if_uncached(id);
-						return res.body;
 					},
 					transform(code, id) {
 						if (!id.endsWith('.svelte')) return null;
@@ -154,8 +86,12 @@ self.addEventListener('message', async (event) => {
 
 						const result = svelte.compile(code, {
 							filename: id,
-							generate: 'dom',
-							dev: true
+							generate: 'client',
+							css: 'external',
+							dev: true,
+							compatibility: {
+								componentApi: 4
+							}
 						});
 
 						if (result.css && result.css.code && result.css.code.trim() !== '') {
@@ -183,3 +119,45 @@ self.addEventListener('message', async (event) => {
 		self.postMessage(error);
 	}
 });
+
+function external(id) {
+	return { id, external: true };
+}
+
+function get_svelte_runtime_url(importee) {
+	const subpath = importee === 'svelte' ? '' : importee.slice('svelte'.length);
+	return with_bundle_query(`${CDN_URL}/svelte@${svelte.VERSION}${subpath}`);
+}
+
+function with_bundle_query(url) {
+	return url.includes('?') ? `${url}&bundle` : `${url}?bundle`;
+}
+
+function resolve_local_import(importee, importer) {
+	if (!importer || !component_lookup.has(importer)) return null;
+
+	const base = importer.slice(0, importer.lastIndexOf('/') + 1);
+	const resolved = normalize_local_path(`${base}${importee}`);
+	const candidates = [
+		resolved,
+		`${resolved}.svelte`,
+		`${resolved}.js`,
+		`${resolved}.json`,
+		`${resolved}/index.svelte`,
+		`${resolved}/index.js`
+	];
+
+	return candidates.find((candidate) => component_lookup.has(candidate)) || null;
+}
+
+function normalize_local_path(path) {
+	const stack = [];
+
+	for (const part of path.split('/')) {
+		if (!part || part === '.') continue;
+		if (part === '..') stack.pop();
+		else stack.push(part);
+	}
+
+	return `./${stack.join('/')}`;
+}

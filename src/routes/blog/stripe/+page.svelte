@@ -6,15 +6,19 @@
 			name: 'App',
 			type: 'svelte',
 			source: `<script>
-	import { onMount } from 'svelte';
 	import {loadStripe} from '@stripe\/stripe-js';
+
+	let stripe;
 	
-		onMount(async () => {
-			\/\/ Stripe.js will not be loaded until \`loadStripe\` is called
-const stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
-				});
+	async function initializeStripe() {
+		\/\/ Stripe.js will not be loaded until \`loadStripe\` is called
+		stripe = await loadStripe('pk_test_TYooMQauvdEDq54NiTphI7jx');
+	}
 	
 	async function checkout(){
+	if (!stripe) {
+		await initializeStripe();
+	}
 			\/\/ Call your backend to create the Checkout Session
 	const response = await fetch('\/create-checkout-session', { method: 'POST' });
 	const session = await response.json();

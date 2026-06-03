@@ -1,13 +1,10 @@
 <script>
-	let w = 1200;
-	let h = 630;
 	let title = 'Open Graph Tutorial';
 	let name = 'Svelte Board';
 	let subtitle = 'Using open graph with Svelte';
 	let url = 'https://svelteboard.com/tutorials/open-graph';
 	let image = '';
-	let description =
-		'Using Open Graph to make your links more shareable.';
+	let description = 'Using Open Graph to make your links more shareable.';
 	let type = 'Article';
 </script>
 
@@ -16,10 +13,7 @@
 	<meta property="og:title" content="Open Graph Tutorial" />
 	<meta property="og:site_name" content="Svelte Board" />
 	<meta property="og:url" content="https://svelteboard.com/tutorials/open-graph" />
-	<meta
-		property="og:description"
-		content="Using Open Graph to make your links more shareable."
-	/>
+	<meta property="og:description" content="Using Open Graph to make your links more shareable." />
 	<meta property="og:type" content="article" />
 	<meta property="og:image" content="https://svelteboard.com/content/openGraph.png" />
 	<meta name="twitter:card" content="summary_large_image" />
@@ -44,13 +38,13 @@
 						/>
 
 						<div
-							class="absolute bg-gradient-to-r from-slate-50/60 to-slate-900  w-[1px] h-full left-12"
+							class="absolute bg-gradient-to-r from-slate-50/60 to-slate-900 w-[1px] h-full left-12"
 						/>
 						<div
 							class="absolute bg-gradient-to-r from-slate-50/80 to-slate-900 w-[1px] h-full right-16"
 						/>
 						<div
-							class="absolute bg-gradient-to-r from-slate-50/40 to-slate-900  w-[1px] h-full right-8"
+							class="absolute bg-gradient-to-r from-slate-50/40 to-slate-900 w-[1px] h-full right-8"
 						/>
 						<div
 							class="absolute bg-gradient-to-r from-slate-50/30 to-slate-900 w-[1px] h-full left-8"
@@ -100,7 +94,7 @@
 		</div>
 	</div>
 
-	<div class="grow max-w-3xl  m-auto">
+	<div class="grow max-w-3xl m-auto">
 		<div class="mx-4 space-y-6 bg-slate-50 border px-10 py-6">
 			<div class="2xl:grid 2xl:grid-cols-5 2xl:gap-4 2xl:items-start 2xl:pt-5">
 				<label for="title" class="block text-sm font-medium text-slate-700 sm:mt-px sm:pt-2">
@@ -243,7 +237,9 @@
 		<span class="text-[#f472b6]">{`<`}meta</span> property=<span class="text-[#7dd3fc]"
 			>"og:image"</span
 		>
-		content=<span class="text-[#7dd3fc]">"{image || 'https://svelteboard.com/content/yourimage.png'}"</span>
+		content=<span class="text-[#7dd3fc]"
+			>"{image || 'https://svelteboard.com/content/yourimage.png'}"</span
+		>
 		<span class="text-[#f472b6]">/></span>
 		<br />
 		<span class="text-[#f472b6]">{`<`}meta</span> name=<span class="text-[#7dd3fc]"
@@ -306,7 +302,7 @@
 			<a href="https://ogp.me/" target="_blank">
 				<li>Open Graph Protocol</li>
 			</a>
-						<a href="https://metatags.io/" target="_blank">
+			<a href="https://metatags.io/" target="_blank">
 				<li>Meta Tags is a great tool for generating these also</li>
 			</a>
 			<a

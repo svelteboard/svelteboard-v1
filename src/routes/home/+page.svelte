@@ -30,7 +30,7 @@
 		</div>
 		<img
 			class="relative block mx-auto px-12 lg:px-8 -mt-20 xs:-mt-40 md:-mt-64"
-			src="aurora-assets/headers/header-2-center.png"
+			src="/android-chrome-512x512.png"
 			alt=""
 		/>
 	</div>

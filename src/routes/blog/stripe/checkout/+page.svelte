@@ -1,7 +1,3 @@
-<script>
-	let iframe;
-</script>
-
 <svelte:head>
 	<title>Stripe Checkout Playground</title>
 	<meta property="og:title" content="Stripe Checkout Playground" />
@@ -53,8 +49,8 @@
 		<span class="font-mono text-slate-900 bg-slate-200 px-2 py-1 rounded-md text-lg"
 			>line_items</span
 		>
-		array. Each item can have a name, description, and image that can be set ahead of time or on the
-		fly. From the Stripe Dashboard, you can also setup recurring billing data, and upsells (for subscriptions),
+		array. Each item can have a name, description, and image that can be set ahead of time or on the fly.
+		From the Stripe Dashboard, you can also setup recurring billing data, and upsells (for subscriptions),
 		and
 		<a href="https://stripe.com/docs/payments/checkout/cross-sells" target="_blank">cross-sells</a>.
 	</p>

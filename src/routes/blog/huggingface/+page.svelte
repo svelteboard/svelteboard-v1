@@ -6,7 +6,7 @@
 	let API_TOKEN;
 	let model = 'GPT2';
 	let prompt = 'Hello world!';
-	let promise = generated_text();
+	let promise;
 
 	let components = [
 		{
@@ -16,7 +16,7 @@
 	let API_TOKEN;
 	let model = 'GPT2';
 	let prompt = 'Hello world!';
-	let promise = generated_text();
+	let promise;
 
 	async function generated_text() {
 		const headers = new Headers({ Authorization: \`Bearer \${API_TOKEN}\` });
@@ -126,6 +126,7 @@
 		>Submit<\/button
 	>
 <\/div>
+{#if promise}
 	{#await promise}
 		<div class="max-w-3xl m-auto clear-both prose prose-xl prose-slate pt-8">
 			<svg
@@ -156,7 +157,8 @@
 		<div class="max-w-2xl m-auto clear-both prose prose-xl prose-slate pt-8 px-4">
 			<p class="text-red-600">{error}</p>
 		</div>
-	{/await}`
+	{/await}
+{/if}`
 		}
 	];
 
@@ -331,37 +333,39 @@
 		>Submit</button
 	>
 </div>
-{#await promise}
-	<div class="max-w-3xl m-auto clear-both prose prose-xl prose-slate pt-8">
-		<svg
-			class="animate-spin h-8 w-8 p-1 text-slate-700 m-auto"
-			xmlns="http://www.w3.org/2000/svg"
-			fill="none"
-			viewBox="0 0 24 24"
-		>
-			<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
-			<path
-				class="opacity-75"
-				fill="currentColor"
-				d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-			/>
-		</svg>
-	</div>
-{:then result}
-	<div class="max-w-3xl m-auto clear-both prose prose-xl prose-slate pt-8">
-		{#if result[0].generated_text}
-			<h4 class="block text-sm font-medium text-slate-800">Response</h4>
-			<p>{JSON.stringify(result[0].generated_text)}</p>
-		{:else}
-			<h4 class="block text-sm font-medium text-slate-800">JSON Output</h4>
-			<p>{JSON.stringify(result)}</p>
-		{/if}
-	</div>
-{:catch error}
-	<div class="max-w-2xl m-auto clear-both prose prose-xl prose-slate pt-8">
-		<p class="text-red-600">{error}</p>
-	</div>
-{/await}
+{#if promise}
+	{#await promise}
+		<div class="max-w-3xl m-auto clear-both prose prose-xl prose-slate pt-8">
+			<svg
+				class="animate-spin h-8 w-8 p-1 text-slate-700 m-auto"
+				xmlns="http://www.w3.org/2000/svg"
+				fill="none"
+				viewBox="0 0 24 24"
+			>
+				<circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+				<path
+					class="opacity-75"
+					fill="currentColor"
+					d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+				/>
+			</svg>
+		</div>
+	{:then result}
+		<div class="max-w-3xl m-auto clear-both prose prose-xl prose-slate pt-8">
+			{#if result[0].generated_text}
+				<h4 class="block text-sm font-medium text-slate-800">Response</h4>
+				<p>{JSON.stringify(result[0].generated_text)}</p>
+			{:else}
+				<h4 class="block text-sm font-medium text-slate-800">JSON Output</h4>
+				<p>{JSON.stringify(result)}</p>
+			{/if}
+		</div>
+	{:catch error}
+		<div class="max-w-2xl m-auto clear-both prose prose-xl prose-slate pt-8">
+			<p class="text-red-600">{error}</p>
+		</div>
+	{/await}
+{/if}
 <div class="max-w-3xl m-auto prose prose-slate clear-both pt-8 prose-a:text-blue-600">
 	<h3>Next Steps</h3>
 	<p class="prose-xl">

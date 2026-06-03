@@ -1,6 +1,4 @@
 <script>
-	import Repl from '$lib/repl/index.svelte';
-
 	import tutorials from '../tutorials.json';
 	let table = tutorials;
 	let newRow = {

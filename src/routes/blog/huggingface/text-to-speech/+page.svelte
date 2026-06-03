@@ -3,7 +3,7 @@
 
 	let prompt =
 		'This is a demo of text to speech using the Hugging Face Inference A.P.I. with Svelte. This is content editable by the way. Try changing the text and generating new audio.';
-	let promise = generate_audio();
+	let promise;
 
 	let components = [
 		{

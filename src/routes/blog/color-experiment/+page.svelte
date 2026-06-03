@@ -8,7 +8,6 @@
 	let height = $state('812');
 	let scale = $state('100');
 
-	let s = $derived(parseInt(scale) / 100);
 	let w = $derived(parseInt(width));
 	let h = $derived(parseInt(height));
 
@@ -49,13 +48,6 @@
 			height = Math.round(h).toString();
 		}
 	}
-	function getMinutes() {
-		let min = time.getMinutes();
-		if (min < 10) {
-			min = '0' + min;
-		}
-		return min;
-	}
 	let time = new Date();
 	let hours = $derived(time.getHours() % 12 || 12);
 	let minutes = $derived(time.getMinutes());
@@ -86,7 +78,7 @@
 	}
 </script>
 
-<svelte:window on:mouseup={handleMouseup} on:mousemove={handleMousemove} />
+<svelte:window onmouseup={handleMouseup} onmousemove={handleMousemove} />
 
 <svelte:head>
 	<title>Color Experiment</title>
@@ -179,8 +171,8 @@
 			<label for="URL" class="block text-sm font-medium leading-6 text-slate-900">URL</label>
 			<div class="mt-2">
 				<input
-					on:keydown={handle_keydown}
-					on:blur={handle_blur}
+					onkeydown={handle_keydown}
+					onblur={handle_blur}
 					bind:value={url}
 					class="block w-full rounded-md border-0 py-1.5 text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
 					placeholder="tailwindcss.com"
@@ -270,8 +262,8 @@
 									contenteditable="true"
 									bind:this={desktopUrl}
 									class="outline-none"
-									on:keydown={handle_keydown}
-									on:blur={handle_blur}
+									onkeydown={handle_keydown}
+									onblur={handle_blur}
 									bind:innerHTML={url}
 								/>
 							</div>
@@ -387,8 +379,8 @@ c-52 33 -88 86 -102 147 -14 62 -14 1898 0 1960 18 80 85 155 155 173 10 2
 							bind:this={mobileUrl}
 							contenteditable="true"
 							class="outline-none"
-							on:keydown={handle_keydown}
-							on:blur={handle_blur}
+							onkeydown={handle_keydown}
+							onblur={handle_blur}
 							bind:innerHTML={url}
 						/>
 					</div>
@@ -466,7 +458,7 @@ c-52 33 -88 86 -102 147 -14 62 -14 1898 0 1960 18 80 85 155 155 173 10 2
 		<div
 			class="z-10 p-2 demo-sm:flex items-center pointer-events-auto cursor-ew-resize justify-self-start grid content-center"
 			style="user-select: none; touch-action: pan-y; max-width:22px;"
-			on:mousedown={handleMousedownX}
+			onmousedown={handleMousedownX}
 		>
 			<div class="w-1.5 h-8 bg-slate-500/60 rounded-full cursor-ew-resize absolute" />
 		</div>
@@ -475,7 +467,7 @@ c-52 33 -88 86 -102 147 -14 62 -14 1898 0 1960 18 80 85 155 155 173 10 2
 		<div
 			class="min-w-full z-10 p-2 flex items-center pointer-events-auto cursor-ns-resize justify-self-start grid content-center"
 			style="user-select: none; touch-action: pan-x; max-width:22px;"
-			on:mousedown={handleMousedownY}
+			onmousedown={handleMousedownY}
 		>
 			<div class="w-8 h-1.5 bg-slate-500/60 rounded-full cursor-ns-resize m-auto z-50" />
 		</div>

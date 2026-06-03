@@ -120,7 +120,7 @@
 		</svg>
 	</div>
 
-	<div class="max-w-full w-32 sm:w-60 m-auto  -mt-4 sm:-mt-8 left relative">
+	<div class="max-w-full w-32 sm:w-60 m-auto -mt-4 sm:-mt-8 left relative">
 		<div
 			class="bg-gradient-to-r from-yellow-900 to-yellow-800/90 rounded-md w-full h-3 sm:h-4 absolute -rotate-12"
 		/>
@@ -147,6 +147,6 @@
 		}
 	}
 	.marshmallow {
-		cursor: url('/content/marshmallow.png'), auto;
+		cursor: grab;
 	}
 </style>
