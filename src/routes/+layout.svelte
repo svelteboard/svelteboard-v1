@@ -3,7 +3,6 @@
 	import '../app.css';
 
 	let mobile_menu_open = false;
-	const year = new Date().getFullYear();
 
 	const footer_links = [
 		{ href: '/blog', label: 'Tutorials' },
@@ -193,9 +192,6 @@
 			>
 				<div>
 					<a class="font-bold text-forest-900 hover:text-forest-700" href="/"> Svelteboard </a>
-					<p class="mt-2 max-w-md">
-						Practical Svelte demos, snippets, and a Svelte 5 browser REPL.
-					</p>
 				</div>
 
 				<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
@@ -218,8 +214,6 @@
 							</li>
 						</ul>
 					</nav>
-
-					<p class="text-slate-500">Built with Svelte 5 &middot; &copy; {year}</p>
 				</div>
 			</div>
 		</footer>
