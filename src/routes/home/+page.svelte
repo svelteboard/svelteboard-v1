@@ -141,7 +141,7 @@
 						class="w-64 max-w-full m-auto relative flex xs:inline-flex items-center justify-center h-12 px-5 text-center text-base text-forest-800 font-bold bg-white rounded-lg transition duration-300"
 						href="/blog"
 					>
-						<span>See blog</span>
+						<span>Browse tutorials</span>
 					</a>
 				</div>
 			</div>

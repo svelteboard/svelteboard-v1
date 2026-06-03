@@ -1,6 +1,15 @@
 <script>
+	import { page } from '$app/state';
 	import '../app.css';
+
 	let mobile_menu_open = false;
+	const year = new Date().getFullYear();
+
+	const footer_links = [
+		{ href: '/blog', label: 'Tutorials' },
+		{ href: '/snippets', label: 'Code Snippets' },
+		{ href: '/repl', label: 'REPL' }
+	];
 </script>
 
 <svelte:head>
@@ -38,7 +47,7 @@
 								<li class="font-medium tracking-tight">
 									<a
 										class="text-white hover:text-forest-300 px-6 py-3 border-b border-transparent hover:border-forest-300"
-										href="/blog">Blog</a
+										href="/blog">Tutorials</a
 									>
 								</li>
 								<li class="font-medium tracking-tight">
@@ -154,10 +163,10 @@
 					<div class="flex flex-col justify-center py-16 w-full">
 						<ul>
 							<li class="mb-12 font-medium hover:text-forest-50 text-white tracking-tight">
-								<a on:click={() => (mobile_menu_open = false)} href="/blog">Blog</a>
+								<a on:click={() => (mobile_menu_open = false)} href="/blog">Tutorials</a>
 							</li>
 							<li class="mb-12 font-medium hover:text-forest-50 text-white tracking-tight">
-								<a on:click={() => (mobile_menu_open = false)} href="snippets">Code Snippets</a>
+								<a on:click={() => (mobile_menu_open = false)} href="/snippets">Code Snippets</a>
 							</li>
 							<li class="font-medium hover:text-forest-50 text-white tracking-tight">
 								<a on:click={() => (mobile_menu_open = false)} href="/repl">REPL</a>
@@ -177,6 +186,44 @@
 	<main class="grow flex flex-col bg-gray-50">
 		<slot />
 	</main>
+	{#if page.url.pathname !== '/repl'}
+		<footer class="border-t border-forest-900/10 bg-gray-50">
+			<div
+				class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 text-sm text-slate-600 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8"
+			>
+				<div>
+					<a class="font-bold text-forest-900 hover:text-forest-700" href="/"> Svelteboard </a>
+					<p class="mt-2 max-w-md">
+						Practical Svelte demos, snippets, and a Svelte 5 browser REPL.
+					</p>
+				</div>
+
+				<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+					<nav aria-label="Footer">
+						<ul class="flex flex-wrap gap-x-5 gap-y-2">
+							{#each footer_links as { href, label }}
+								<li>
+									<a class="font-medium text-slate-700 hover:text-forest-800" {href}>{label}</a>
+								</li>
+							{/each}
+							<li>
+								<a
+									class="font-medium text-slate-700 hover:text-forest-800"
+									href="https://github.com/svelteboard/svelteboard-v1"
+									target="_blank"
+									rel="noreferrer"
+								>
+									GitHub
+								</a>
+							</li>
+						</ul>
+					</nav>
+
+					<p class="text-slate-500">Built with Svelte 5 &middot; &copy; {year}</p>
+				</div>
+			</div>
+		</footer>
+	{/if}
 </div>
 
 <style>

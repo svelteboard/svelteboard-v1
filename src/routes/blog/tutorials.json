@@ -1,39 +1,110 @@
 [
 	{
-		"tag": "Video",
-		"title": "Svnotion",
-		"preview": "Building a Notion editor clone with Svelte, Tiptap, and Tailwind.",
-		"url": "/blog/svnotion"
+		"tag": "REPL",
+		"title": "REPL Scratchpad",
+		"preview": "Start with a small Svelte 5 example, edit it live, and inspect the compiled output.",
+		"url": "/blog/repl",
+		"group": "Start here",
+		"level": "Beginner",
+		"time": "5 min"
+	},
+	{
+		"tag": "Component",
+		"title": "Simple Table",
+		"preview": "Build a small Svelte table from structured data.",
+		"url": "/blog/simple-table",
+		"group": "Start here",
+		"level": "Beginner",
+		"time": "10 min"
+	},
+	{
+		"tag": "Component",
+		"title": "Editable Table Data",
+		"preview": "Experiment with editable table rows and copy the generated JSON.",
+		"url": "/blog/table",
+		"group": "Start here",
+		"level": "Beginner",
+		"time": "10 min"
+	},
+	{
+		"tag": "API",
+		"title": "Stripe REPL Demo",
+		"preview": "Explore the basic Stripe checkout flow inside the Svelteboard REPL.",
+		"url": "/blog/stripe",
+		"group": "Build with APIs",
+		"level": "Intermediate",
+		"time": "15 min"
 	},
 	{
 		"tag": "Tool",
 		"title": "Stripe Checkout Playground",
 		"preview": "Stripe playground to test the Stripe Checkout API.",
-		"url": "/blog/stripe/checkout"
+		"url": "/blog/stripe/checkout",
+		"group": "Build with APIs",
+		"level": "Intermediate",
+		"time": "15 min"
+	},
+	{
+		"tag": "Hugging Face",
+		"title": "Hugging Face Inference API in Svelte",
+		"preview": "Call hosted machine learning models from a Svelte interface.",
+		"url": "/blog/huggingface",
+		"group": "Build with APIs",
+		"level": "Intermediate",
+		"time": "20 min"
+	},
+	{
+		"tag": "Hugging Face",
+		"title": "Text to Speech with Hugging Face",
+		"preview": "Generate speech from text with the Hugging Face Inference API.",
+		"url": "/blog/huggingface/text-to-speech",
+		"group": "Build with APIs",
+		"level": "Intermediate",
+		"time": "15 min"
 	},
 	{
 		"tag": "Tool",
 		"title": "Open Graph",
-		"preview": "Make your links more shareable with Open Graph",
-		"url": "/blog/open-graph"
+		"preview": "Make your links more shareable with Open Graph.",
+		"url": "/blog/open-graph",
+		"group": "Generate and share media",
+		"level": "Beginner",
+		"time": "10 min"
 	},
-
+	{
+		"tag": "Tool",
+		"title": "HTML to Image",
+		"preview": "Generate social images from editable HTML and Tailwind styles.",
+		"url": "/blog/html-to-image",
+		"group": "Generate and share media",
+		"level": "Intermediate",
+		"time": "15 min"
+	},
+	{
+		"tag": "Video",
+		"title": "Svnotion",
+		"preview": "Building a Notion editor clone with Svelte, Tiptap, and Tailwind.",
+		"url": "/blog/svnotion",
+		"group": "Interface experiments",
+		"level": "Advanced",
+		"time": "Video"
+	},
 	{
 		"tag": "Experiment",
 		"title": "Color Experiment",
-		"preview": "Using Mix Blend to Fine Tune Your Color Pallet",
-		"url": "/blog/color-experiment"
+		"preview": "Use mix-blend-mode to fine tune an interactive color palette.",
+		"url": "/blog/color-experiment",
+		"group": "Interface experiments",
+		"level": "Intermediate",
+		"time": "10 min"
 	},
 	{
-		"tag": "Component",
-		"title": "Simple Table",
-		"preview": "A simple sveltey table",
-		"url": "/blog/simple-table"
-	},
-	{
-		"tag": "REPL",
-		"title": "REPL Scratchpad",
-		"preview": "Getting started with SvelteKit and Tailwind.",
-		"url": "/blog/repl"
+		"tag": "Experiment",
+		"title": "Fire Landing Page",
+		"preview": "A visual Svelte and SVG experiment with pointer-driven motion.",
+		"url": "/blog/fire",
+		"group": "Interface experiments",
+		"level": "Intermediate",
+		"time": "5 min"
 	}
 ]
